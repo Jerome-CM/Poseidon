@@ -1,6 +1,7 @@
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.Trade;
+import com.nnk.springboot.repositories.TradeRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,12 +14,18 @@ import javax.validation.Valid;
 
 @Controller
 public class TradeController {
-    // TODO: Inject Trade service
+
+    public final TradeRepository tradeRepository;
+
+    public TradeController(TradeRepository tradeRepository) {
+        this.tradeRepository = tradeRepository;
+    }
+
 
     @RequestMapping("/trade/list")
     public String home(Model model)
     {
-        // TODO: find all Trade, add to model
+        model.addAttribute("trades", tradeRepository.findAll());
         return "trade/list";
     }
 
@@ -29,7 +36,11 @@ public class TradeController {
 
     @PostMapping("/trade/validate")
     public String validate(@Valid Trade trade, BindingResult result, Model model) {
-        // TODO: check data valid and save to db, after saving return Trade list
+        if (!result.hasErrors()) {
+            tradeRepository.save(trade);
+            model.addAttribute("trades", tradeRepository.findAll());
+            return "redirect:/trade/list";
+        }
         return "trade/add";
     }
 
