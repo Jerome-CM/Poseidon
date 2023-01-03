@@ -2,6 +2,7 @@ package com.nnk.springboot.domain;
 
 import lombok.Data;
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 
@@ -12,9 +13,9 @@ public class Trade {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     Integer tradeId;
-    @NotNull
+    @NotBlank(message = "Account is mandatory")
     String account;
-    @NotNull
+    @NotBlank(message = "Type is mandatory")
     String type;
     Double buyQuantity;
     Double sellQuantity;
