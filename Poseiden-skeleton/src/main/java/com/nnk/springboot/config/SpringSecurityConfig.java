@@ -36,6 +36,7 @@ public class SpringSecurityConfig {
                         .requestMatchers("/login").permitAll()
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers("/user/add").permitAll()
                         .anyRequest().authenticated()
                         .and()
                         .formLogin().loginPage("/login")
