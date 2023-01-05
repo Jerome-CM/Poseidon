@@ -14,7 +14,7 @@
 			<div class="form-group">
 				<label for="user" class="col-sm-2 control-label">User</label>
 				<div class="col-sm-10">
-					<input type="text" th:field="*{user}" id="user" placeholder="User" class="col-4">
+					<input type="text" th:field="*{username}" id="user" placeholder="User" class="col-4">
 					<p class="text-danger" th:if="${#fields.hasErrors('user')}" th:errors="*{user}"></p>
 				</div>
 			</div>
