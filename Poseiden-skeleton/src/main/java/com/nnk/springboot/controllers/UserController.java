@@ -4,7 +4,6 @@ import com.nnk.springboot.domain.User;
 import com.nnk.springboot.repositories.UserRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,15 +22,18 @@ public class UserController {
 
     private final UserRepository userRepository;
 
-    public UserController(UserRepository userRepository) {
+    private final com.nnk.springboot.services.interfaces.User userInt;
+
+    public UserController(UserRepository userRepository, com.nnk.springboot.services.interfaces.User userInt) {
         this.userRepository = userRepository;
+        this.userInt = userInt;
     }
 
     @RequestMapping("/user/list")
     public String home(Model model)
     {
         logger.info("--- Method home ---");
-        model.addAttribute("users", userRepository.findAll());
+        model.addAttribute("users", userInt.getUserDTO("MULTIPLE", 0));
         return "user/list";
     }
 
@@ -48,7 +50,7 @@ public class UserController {
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
             user.setPassword(encoder.encode(user.getPassword()));
             userRepository.save(user);
-            model.addAttribute("users", userRepository.findAll());
+            model.addAttribute("users", userInt.getUserDTO("MULTIPLE", 0));
             return "redirect:/user/list";
         }
         return "user/add";

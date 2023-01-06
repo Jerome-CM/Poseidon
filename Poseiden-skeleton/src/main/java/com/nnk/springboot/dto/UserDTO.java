@@ -3,7 +3,7 @@ package com.nnk.springboot.dto;
 import lombok.Data;
 
 @Data
-public class userDTO {
+public class UserDTO {
 
     private Integer id;
     private String fullname;

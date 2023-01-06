@@ -20,6 +20,8 @@ public class TradeController {
 
     public final TradeRepository tradeRepository;
 
+
+
     private static final Logger logger = LogManager.getLogger(TradeController.class);
 
     public TradeController(TradeRepository tradeRepository) {
