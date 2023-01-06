@@ -1,6 +1,6 @@
 package com.nnk.springboot.config;
 
-import com.nnk.springboot.services.UserDetailsServiceImpl;
+import com.nnk.springboot.services.UserImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.annotation.Bean;
@@ -22,7 +22,7 @@ import java.util.List;
 public class SpringSecurityConfig {
     private static final Logger logger = LogManager.getLogger(SpringSecurityConfig.class);
 
-    UserDetailsServiceImpl userDetailsService;
+    UserImpl userDetailsService;
 
     @Bean
     public SecurityFilterChain filterChain (HttpSecurity http) throws Exception {
@@ -36,6 +36,7 @@ public class SpringSecurityConfig {
                         .requestMatchers("/login").permitAll()
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers("/user/add").permitAll()
                         .anyRequest().authenticated()
                         .and()
                         .formLogin().loginPage("/login")
