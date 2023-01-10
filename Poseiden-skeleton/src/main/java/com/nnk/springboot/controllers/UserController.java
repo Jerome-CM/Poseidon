@@ -1,5 +1,6 @@
 package com.nnk.springboot.controllers;
 
+import com.nnk.springboot.config.PatternInput;
 import com.nnk.springboot.domain.User;
 import com.nnk.springboot.repositories.UserRepository;
 import org.apache.logging.log4j.LogManager;
@@ -24,9 +25,12 @@ public class UserController {
 
     private final com.nnk.springboot.services.interfaces.User userInt;
 
-    public UserController(UserRepository userRepository, com.nnk.springboot.services.interfaces.User userInt) {
+    private final PatternInput patternInput;
+
+    public UserController(UserRepository userRepository, com.nnk.springboot.services.interfaces.User userInt, PatternInput patternInput) {
         this.userRepository = userRepository;
         this.userInt = userInt;
+        this.patternInput = patternInput;
     }
 
     @RequestMapping("/user/list")
@@ -38,8 +42,9 @@ public class UserController {
     }
 
     @GetMapping("/user/add")
-    public String addUser(User bid) {
+    public String addUser(User bid, Model model) {
         logger.info("--- Method addUser ---");
+        model.addAttribute("pattern", patternInput);
         return "user/add";
     }
 
