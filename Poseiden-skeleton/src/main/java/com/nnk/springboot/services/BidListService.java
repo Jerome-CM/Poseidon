@@ -1,19 +1,19 @@
 package com.nnk.springboot.services;
 
-import com.nnk.springboot.domain.CurvePoint;
-import com.nnk.springboot.dto.CurvePointDTO;
+import com.nnk.springboot.domain.BidList;
+import com.nnk.springboot.dto.BidListDTO;
 
 import java.util.List;
 
-public interface CurvePointService {
+public interface BidListService {
 
-    public void saveCurvePoint(CurvePoint curvePoint);
+    public void saveBidList(BidList bidList);
 
-    public CurvePointDTO updateCurvePoint(CurvePoint curvePoint, int id);
+    public BidListDTO updateBidList(BidList bidList, int id);
 
-    public void deleteCurvePointById(int id);
-    public List<CurvePointDTO> getAllCurvePoint();
+    public void deleteBidListById(int id);
+    public List<BidListDTO> getAllBidList();
 
-    public CurvePointDTO getCurvePointById(int id);
+    public BidListDTO getBidListById(int id);
 
 }

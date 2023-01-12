@@ -1,15 +1,19 @@
-package com.nnk.springboot.services.interfaces;
+package com.nnk.springboot.services;
 
+import com.nnk.springboot.domain.Trade;
 import com.nnk.springboot.dto.TradeDTO;
-import com.nnk.springboot.dto.UserDTO;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 
-public interface Trade {
+public interface TradeService {
 
-    public List<TradeDTO> getTradeDTOList();
+    public void saveTrade(Trade trade);
 
-    public TradeDTO getTradeDTO(int id);
+    public TradeDTO updateTrade(Trade trade, int id);
+
+    public void deleteTradeById(int id);
+    public List<TradeDTO> getAllTrade();
+
+    public TradeDTO getTradeById(int id);
 
 }

@@ -1,8 +1,8 @@
 package com.nnk.springboot.services;
 
-import com.nnk.springboot.domain.Trade;
-import com.nnk.springboot.dto.TradeDTO;
-import com.nnk.springboot.repositories.TradeRepository;
+import com.nnk.springboot.domain.Rating;
+import com.nnk.springboot.dto.RatingDTO;
+import com.nnk.springboot.repositories.RatingRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
@@ -11,96 +11,96 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class TradeServiceImpl implements TradeService {
+public class RatingServiceImpl implements RatingService {
 
-    private static final Logger logger = LogManager.getLogger(TradeServiceImpl.class);
+    private static final Logger logger = LogManager.getLogger(RatingServiceImpl.class);
 
-    private final TradeRepository tradeRepository;
+    private final RatingRepository ratingRepository;
 
     private final ModelMapper modelMapper;
 
-    public TradeServiceImpl(TradeRepository tradeRepository, ModelMapper modelMapper) {
-        this.tradeRepository = tradeRepository;
+    public RatingServiceImpl(RatingRepository ratingRepository, ModelMapper modelMapper) {
+        this.ratingRepository = ratingRepository;
         this.modelMapper = modelMapper;
     }
 
     @Override
-    public void saveTrade(Trade trade){
-        logger.info("--- Method saveTrade ---");
+    public void saveRating(Rating rating){
+        logger.info("--- Method saveRating ---");
         try{
-            tradeRepository.save(trade);
-            logger.info("Trade saved : {}", trade);
+            ratingRepository.save(rating);
+            logger.info("Rating saved : {}", rating);
         } catch (Exception e){
-            logger.error("Impossible to save a trade : {}", e.getMessage());
+            logger.error("Impossible to save a rating : {}", e.getMessage());
         }
     }
 
     @Override
-    public TradeDTO updateTrade(Trade trade, int id){
-        logger.info("--- Method updateTrade ---");
+    public RatingDTO updateRating(Rating rating, int id){
+        logger.info("--- Method updateRating ---");
         try {
-            Trade tradeHandle = tradeRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
-            trade.setTradeId(tradeHandle.getTradeId());
-            if (trade.getTradeId() != null) {
-                tradeHandle = tradeRepository.save(trade);
-                logger.info("Trade updated : {}", tradeHandle);
-                return modelMapper.map(tradeHandle, TradeDTO.class);
+            Rating ratingHandle = ratingRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid rating Id:" + id));
+            rating.setId(ratingHandle.getId());
+            if (rating.getId() != null) {
+                ratingHandle = ratingRepository.save(rating);
+                logger.info("Rating updated : {}", ratingHandle);
+                return modelMapper.map(ratingHandle, RatingDTO.class);
             } else {
-                logger.error("Trade id is null with this id : {}", trade);
+                logger.error("Rating id is null with this id : {}", rating);
                 return null;
             }
         } catch (Exception e) {
-            logger.error("Impossible to updated the trade : {}", e.getMessage());
+            logger.error("Impossible to updated the rating : {}", e.getMessage());
             return null;
         }
     }
 
     @Override
-    public void deleteTradeById(int id) {
-        logger.info("--- Method deleteTradebyId ---");
+    public void deleteRatingById(int id) {
+        logger.info("--- Method deleteRatingById ---");
         try{
-            Trade trade = tradeRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid trade Id:" + id));
-            tradeRepository.delete(trade);
-            logger.info("Trade deleted");
+            Rating rating = ratingRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid rating Id:" + id));
+            ratingRepository.delete(rating);
+            logger.info("Rating deleted");
         } catch (Exception e){
-            logger.error("Impossible to delete the trade with this id({}) : {}",id, e.getMessage());
+            logger.error("Impossible to delete the rating with this id({}) : {}",id, e.getMessage());
         }
     }
 
 
     /**
-     * Get TradeDTO for all trade
+     * Get RatingDTO for all rating
      * @return
      */
     @Override
-    public List<TradeDTO> getAllTrade() {
+    public List<RatingDTO> getAllRating() {
 
-        List<Trade> tradeList = tradeRepository.findAll();
-        List<TradeDTO> tradeDTOList = new ArrayList<>();
+        List<Rating> ratingList = ratingRepository.findAll();
+        List<RatingDTO> ratingDTOList = new ArrayList<>();
 
-        for(Trade trade : tradeList){
-            TradeDTO tradeDTO = modelMapper.map(trade, TradeDTO.class);
-            tradeDTOList.add(tradeDTO);
+        for(Rating rating : ratingList){
+            RatingDTO ratingDTO = modelMapper.map(rating, RatingDTO.class);
+            ratingDTOList.add(ratingDTO);
         }
 
-        return tradeDTOList;
+        return ratingDTOList;
 
     }
 
     /**
-     * Get TradeDTO by Id
+     * Get RatingDTO by Id
      * @param id
      * @return
      */
     @Override
-    public TradeDTO getTradeById(int id) {
+    public RatingDTO getRatingById(int id) {
 
         if(id != 0) {
-            Optional<Trade> tradeById = Optional.ofNullable(tradeRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid trade Id:" + id)));
-            if (tradeById.isPresent()) {
-                return modelMapper.map(tradeById.get(), TradeDTO.class);
+            Optional<Rating> ratingById = Optional.ofNullable(ratingRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid rating Id:" + id)));
+            if (ratingById.isPresent()) {
+                return modelMapper.map(ratingById.get(), RatingDTO.class);
             } else {
-                logger.error("Trade not Found id : {})", id);
+                logger.error("Rating not Found id : {})", id);
             }
         } else {
             throw new IllegalArgumentException("Invalid Id:" + id);

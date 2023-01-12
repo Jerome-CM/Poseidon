@@ -1,8 +1,8 @@
 package com.nnk.springboot.services;
 
-import com.nnk.springboot.domain.Trade;
-import com.nnk.springboot.dto.TradeDTO;
-import com.nnk.springboot.repositories.TradeRepository;
+import com.nnk.springboot.domain.RuleName;
+import com.nnk.springboot.dto.RuleNameDTO;
+import com.nnk.springboot.repositories.RuleNameRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
@@ -11,96 +11,96 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class TradeServiceImpl implements TradeService {
+public class RuleNameServiceImpl implements RuleNameService {
 
-    private static final Logger logger = LogManager.getLogger(TradeServiceImpl.class);
+    private static final Logger logger = LogManager.getLogger(RuleNameServiceImpl.class);
 
-    private final TradeRepository tradeRepository;
+    private final RuleNameRepository ruleNameRepository;
 
     private final ModelMapper modelMapper;
 
-    public TradeServiceImpl(TradeRepository tradeRepository, ModelMapper modelMapper) {
-        this.tradeRepository = tradeRepository;
+    public RuleNameServiceImpl(RuleNameRepository ruleNameRepository, ModelMapper modelMapper) {
+        this.ruleNameRepository = ruleNameRepository;
         this.modelMapper = modelMapper;
     }
 
     @Override
-    public void saveTrade(Trade trade){
-        logger.info("--- Method saveTrade ---");
+    public void saveRuleName(RuleName ruleName){
+        logger.info("--- Method saveRuleName ---");
         try{
-            tradeRepository.save(trade);
-            logger.info("Trade saved : {}", trade);
+            ruleNameRepository.save(ruleName);
+            logger.info("RuleName saved : {}", ruleName);
         } catch (Exception e){
-            logger.error("Impossible to save a trade : {}", e.getMessage());
+            logger.error("Impossible to save a ruleName : {}", e.getMessage());
         }
     }
 
     @Override
-    public TradeDTO updateTrade(Trade trade, int id){
-        logger.info("--- Method updateTrade ---");
+    public RuleNameDTO updateRuleName(RuleName ruleName, int id){
+        logger.info("--- Method updateRuleName ---");
         try {
-            Trade tradeHandle = tradeRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
-            trade.setTradeId(tradeHandle.getTradeId());
-            if (trade.getTradeId() != null) {
-                tradeHandle = tradeRepository.save(trade);
-                logger.info("User updated : {}", tradeHandle);
-                return modelMapper.map(tradeHandle, TradeDTO.class);
+            RuleName ruleNameHandle = ruleNameRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid ruleName Id:" + id));
+            ruleName.setId(ruleNameHandle.getId());
+            if (ruleName.getId() != null) {
+                ruleNameHandle = ruleNameRepository.save(ruleName);
+                logger.info("RuleName updated : {}", ruleNameHandle);
+                return modelMapper.map(ruleNameHandle, RuleNameDTO.class);
             } else {
-                logger.error("User id is null with this id : {}", trade);
+                logger.error("RuleName id is null with this id : {}", ruleName);
                 return null;
             }
         } catch (Exception e) {
-            logger.error("Impossible to updated the user : {}", e.getMessage());
+            logger.error("Impossible to updated the ruleName : {}", e.getMessage());
             return null;
         }
     }
 
     @Override
-    public void deleteTradeById(int id) {
-        logger.info("--- Method deleteTradebyId ---");
+    public void deleteRuleNameById(int id) {
+        logger.info("--- Method deleteRuleNameById ---");
         try{
-            Trade trade = tradeRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid trade Id:" + id));
-            tradeRepository.delete(trade);
-            logger.info("Trade deleted");
+            RuleName ruleName = ruleNameRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid ruleName Id:" + id));
+            ruleNameRepository.delete(ruleName);
+            logger.info("RuleName deleted");
         } catch (Exception e){
-            logger.error("Impossible to delete the trade with this id({}) : {}",id, e.getMessage());
+            logger.error("Impossible to delete the ruleName with this id({}) : {}",id, e.getMessage());
         }
     }
 
 
     /**
-     * Get TradeDTO for all trade
+     * Get RuleNameDTO for all ruleName
      * @return
      */
     @Override
-    public List<TradeDTO> getAllTrade() {
+    public List<RuleNameDTO> getAllRuleName() {
 
-        List<Trade> tradeList = tradeRepository.findAll();
-        List<TradeDTO> tradeDTOList = new ArrayList<>();
+        List<RuleName> ruleNameList = ruleNameRepository.findAll();
+        List<RuleNameDTO> ruleNameDTOList = new ArrayList<>();
 
-        for(Trade trade : tradeList){
-            TradeDTO tradeDTO = modelMapper.map(trade, TradeDTO.class);
-            tradeDTOList.add(tradeDTO);
+        for(RuleName ruleName : ruleNameList){
+            RuleNameDTO ruleNameDTO = modelMapper.map(ruleName, RuleNameDTO.class);
+            ruleNameDTOList.add(ruleNameDTO);
         }
 
-        return tradeDTOList;
+        return ruleNameDTOList;
 
     }
 
     /**
-     * Get TradeDTO by Id
+     * Get RuleNameDTO by Id
      * @param id
-     * @return
+     * @return RuleNameDTO
      */
     @Override
-    public TradeDTO getTradeById(int id) {
+    public RuleNameDTO getRuleNameById(int id) {
 
         if(id != 0) {
-            Optional<Trade> tradeById = Optional.ofNullable(tradeRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid trade Id:" + id)));
-            if (tradeById.isPresent()) {
-                return modelMapper.map(tradeById.get(), TradeDTO.class);
+            Optional<RuleName> ruleNameById = Optional.ofNullable(ruleNameRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid ruleName Id:" + id)));
+            if (ruleNameById.isPresent()) {
+                return modelMapper.map(ruleNameById.get(), RuleNameDTO.class);
             } else {
-                logger.error("Trade not Found id : {})", id);
+                logger.error("RuleName not Found id : {})", id);
             }
         } else {
             throw new IllegalArgumentException("Invalid Id:" + id);

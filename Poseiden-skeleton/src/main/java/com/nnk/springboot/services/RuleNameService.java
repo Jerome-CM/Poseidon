@@ -1,19 +1,25 @@
 package com.nnk.springboot.services;
 
+import com.nnk.springboot.domain.RuleName;
 import com.nnk.springboot.domain.Trade;
+import com.nnk.springboot.dto.RuleNameDTO;
 import com.nnk.springboot.dto.TradeDTO;
 
 import java.util.List;
 
-public interface TradeService {
+public interface RuleNameService {
 
-    public void saveTrade(Trade trade);
+    public void saveRuleName(RuleName ruleName);
 
-    public TradeDTO updateTrade(Trade trade, int id);
+    public RuleNameDTO updateRuleName(RuleName ruleName, int id);
 
-    public void deleteTradeById(int id);
-    public List<TradeDTO> getAllTrade();
+    public void deleteRuleNameById(int id);
+    public List<RuleNameDTO> getAllRuleName();
 
-    public TradeDTO getTradeById(int id);
+    public RuleNameDTO getRuleNameById(int id);
+
+
+
+
 
 }

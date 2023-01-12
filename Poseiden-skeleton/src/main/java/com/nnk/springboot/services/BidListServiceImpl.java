@@ -1,8 +1,8 @@
 package com.nnk.springboot.services;
 
-import com.nnk.springboot.domain.CurvePoint;
-import com.nnk.springboot.dto.CurvePointDTO;
-import com.nnk.springboot.repositories.CurvePointRepository;
+import com.nnk.springboot.domain.BidList;
+import com.nnk.springboot.dto.BidListDTO;
+import com.nnk.springboot.repositories.BidListRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
@@ -11,96 +11,96 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class CurvePointServiceImpl implements CurvePointService {
+public class BidListServiceImpl implements BidListService {
 
-    private static final Logger logger = LogManager.getLogger(CurvePointServiceImpl.class);
+    private static final Logger logger = LogManager.getLogger(BidListServiceImpl.class);
 
-    private final CurvePointRepository curvePointRepository;
+    private final BidListRepository bidListRepository;
 
     private final ModelMapper modelMapper;
 
-    public CurvePointServiceImpl(CurvePointRepository curvePointRepository, ModelMapper modelMapper) {
-        this.curvePointRepository = curvePointRepository;
+    public BidListServiceImpl(BidListRepository bidListRepository, ModelMapper modelMapper) {
+        this.bidListRepository = bidListRepository;
         this.modelMapper = modelMapper;
     }
 
     @Override
-    public void saveCurvePoint(CurvePoint curvePoint){
-        logger.info("--- Method saveCurvePoint ---");
+    public void saveBidList(BidList bidList){
+        logger.info("--- Method saveBidList ---");
         try{
-            curvePointRepository.save(curvePoint);
-            logger.info("CurvePoint saved : {}", curvePoint);
+            bidListRepository.save(bidList);
+            logger.info("BidList saved : {}", bidList);
         } catch (Exception e){
-            logger.error("Impossible to save a curvePoint : {}", e.getMessage());
+            logger.error("Impossible to save a bidList : {}", e.getMessage());
         }
     }
 
     @Override
-    public CurvePointDTO updateCurvePoint(CurvePoint curvePoint, int id){
-        logger.info("--- Method updateCurvePoint ---");
+    public BidListDTO updateBidList(BidList bidList, int id){
+        logger.info("--- Method updateBidList ---");
         try {
-            CurvePoint curvePointHandle = curvePointRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid curvePoint Id:" + id));
-            curvePoint.setId(curvePointHandle.getId());
-            if (curvePoint.getId() != null) {
-                curvePointHandle = curvePointRepository.save(curvePoint);
-                logger.info("CurvePoint updated : {}", curvePointHandle);
-                return modelMapper.map(curvePointHandle, CurvePointDTO.class);
+            BidList bidListHandle = bidListRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid bidList Id:" + id));
+            bidList.setBidListId(bidListHandle.getBidListId());
+            if (bidList.getBidListId() != null) {
+                bidListHandle = bidListRepository.save(bidList);
+                logger.info("BidList updated : {}", bidListHandle);
+                return modelMapper.map(bidListHandle, BidListDTO.class);
             } else {
-                logger.error("CurvePoint id is null with this id : {}", curvePoint);
+                logger.error("BidList id is null with this id : {}", bidList);
                 return null;
             }
         } catch (Exception e) {
-            logger.error("Impossible to updated the curvePoint : {}", e.getMessage());
+            logger.error("Impossible to updated the bidList : {}", e.getMessage());
             return null;
         }
     }
 
     @Override
-    public void deleteCurvePointById(int id) {
-        logger.info("--- Method deleteCurvePointById ---");
+    public void deleteBidListById(int id) {
+        logger.info("--- Method deleteBidListById ---");
         try{
-            CurvePoint curvePoint = curvePointRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid curvePoint Id:" + id));
-            curvePointRepository.delete(curvePoint);
-            logger.info("CurvePoint deleted");
+            BidList bidList = bidListRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid bidList Id:" + id));
+            bidListRepository.delete(bidList);
+            logger.info("BidList deleted");
         } catch (Exception e){
-            logger.error("Impossible to delete the curvePoint with this id({}) : {}",id, e.getMessage());
+            logger.error("Impossible to delete the bidList with this id({}) : {}",id, e.getMessage());
         }
     }
 
 
     /**
-     * Get CurvePointDTO for all curvePoint
+     * Get BidListDTO for all bidList
      * @return
      */
     @Override
-    public List<CurvePointDTO> getAllCurvePoint() {
+    public List<BidListDTO> getAllBidList() {
 
-        List<CurvePoint> curvePointList = curvePointRepository.findAll();
-        List<CurvePointDTO> curvePointDTOList = new ArrayList<>();
+        List<BidList> bidListList = bidListRepository.findAll();
+        List<BidListDTO> bidListDTOList = new ArrayList<>();
 
-        for(CurvePoint curvePoint : curvePointList){
-            CurvePointDTO curvePointDTO = modelMapper.map(curvePoint, CurvePointDTO.class);
-            curvePointDTOList.add(curvePointDTO);
+        for(BidList bidList : bidListList){
+            BidListDTO bidListDTO = modelMapper.map(bidList, BidListDTO.class);
+            bidListDTOList.add(bidListDTO);
         }
 
-        return curvePointDTOList;
+        return bidListDTOList;
 
     }
 
     /**
-     * Get CurvePointDTO by Id
+     * Get BidListDTO by Id
      * @param id
      * @return
      */
     @Override
-    public CurvePointDTO getCurvePointById(int id) {
+    public BidListDTO getBidListById(int id) {
 
         if(id != 0) {
-            Optional<CurvePoint> curvePointById = Optional.ofNullable(curvePointRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid curvePoint Id:" + id)));
-            if (curvePointById.isPresent()) {
-                return modelMapper.map(curvePointById.get(), CurvePointDTO.class);
+            Optional<BidList> bidListById = Optional.ofNullable(bidListRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid bidList Id:" + id)));
+            if (bidListById.isPresent()) {
+                return modelMapper.map(bidListById.get(), BidListDTO.class);
             } else {
-                logger.error("CurvePoint not Found id : {})", id);
+                logger.error("BidList not Found id : {})", id);
             }
         } else {
             throw new IllegalArgumentException("Invalid Id:" + id);

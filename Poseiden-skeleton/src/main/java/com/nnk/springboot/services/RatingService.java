@@ -1,19 +1,19 @@
 package com.nnk.springboot.services;
 
-import com.nnk.springboot.domain.Trade;
-import com.nnk.springboot.dto.TradeDTO;
+import com.nnk.springboot.domain.Rating;
+import com.nnk.springboot.dto.RatingDTO;
 
 import java.util.List;
 
-public interface TradeService {
+public interface RatingService {
 
-    public void saveTrade(Trade trade);
+    public void saveRating(Rating rating);
 
-    public TradeDTO updateTrade(Trade trade, int id);
+    public RatingDTO updateRating(Rating rating, int id);
 
-    public void deleteTradeById(int id);
-    public List<TradeDTO> getAllTrade();
+    public void deleteRatingById(int id);
+    public List<RatingDTO> getAllRating();
 
-    public TradeDTO getTradeById(int id);
+    public RatingDTO getRatingById(int id);
 
 }
