@@ -1,21 +1,15 @@
-package com.nnk.springboot.domain;
+package com.nnk.springboot.dto;
 
 import lombok.Data;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.sql.Timestamp;
 
 @Data
-@Entity
-@Table(name = "bidlist")
-public class BidList {
-
-    @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+public class BidListDTO {
     private Integer bidListId;
-    @NotBlank(message = "Account is mandatory")
     private String account;
-    @NotBlank(message = "Type is mandatory")
     private String type;
     private Double bidQuantity;
     private Double askQuantity;

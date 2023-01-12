@@ -1,15 +1,13 @@
-package com.nnk.springboot.domain;
+package com.nnk.springboot.dto;
 
 import lombok.Data;
+
 import javax.persistence.*;
 
 @Data
-@Entity
-@Table(name = "rating")
-public class Rating {
 
-    @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+public class RatingDTO {
+
     private Integer id;
     private String moodysRating;
     private String sandPRating;

@@ -1,15 +1,12 @@
-package com.nnk.springboot.domain;
+package com.nnk.springboot.dto;
 
 import lombok.Data;
+
 import javax.persistence.*;
 
 @Data
-@Entity
-@Table(name = "rulename")
-public class RuleName {
+public class RuleNameDTO {
 
-    @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
     private String name;
     private String description;
