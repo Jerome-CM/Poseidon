@@ -1,27 +1,23 @@
-package com.nnk.springboot.domain;
+package com.nnk.springboot.dto;
 
 import lombok.Data;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.sql.Timestamp;
 
 @Data
-@Entity
-@Table(name = "trade")
-public class Trade {
-    @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    private Integer tradeId;
-    @NotBlank(message = "Account is mandatory")
+public class BidListDTO {
+    private Integer bidListId;
     private String account;
-    @NotBlank(message = "Type is mandatory")
     private String type;
-    private Double buyQuantity;
-    private Double sellQuantity;
-    private Double buyPrice;
-    private Double sellPrice;
+    private Double bidQuantity;
+    private Double askQuantity;
+    private Double bid;
+    private Double ask;
     private String benchmark;
-    private Timestamp tradeDate;
+    private Timestamp bidListDate;
+    private String commentary;
     private String security;
     private String status;
     private String trader;
@@ -34,4 +30,5 @@ public class Trade {
     private String dealType;
     private String sourceListId;
     private String side;
+
 }

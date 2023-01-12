@@ -2,7 +2,9 @@ package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.config.PatternInput;
 import com.nnk.springboot.domain.User;
+import com.nnk.springboot.dto.UserDTO;
 import com.nnk.springboot.repositories.UserRepository;
+import com.nnk.springboot.services.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -23,28 +25,28 @@ public class UserController {
 
     private final UserRepository userRepository;
 
-    private final com.nnk.springboot.services.interfaces.User userInt;
+    private final UserService userService;
 
-    private final PatternInput patternInput;
+    // private final PatternInput patternInput;
 
-    public UserController(UserRepository userRepository, com.nnk.springboot.services.interfaces.User userInt, PatternInput patternInput) {
+    public UserController(UserRepository userRepository, UserService userService) { //PatternInput patternInput
         this.userRepository = userRepository;
-        this.userInt = userInt;
-        this.patternInput = patternInput;
+        this.userService = userService;
+        //this.patternInput = patternInput;
     }
 
     @RequestMapping("/user/list")
     public String home(Model model)
     {
         logger.info("--- Method home ---");
-        model.addAttribute("users", userInt.getUserDTO("MULTIPLE", 0));
+        model.addAttribute("users", userService.getAllUsers());
         return "user/list";
     }
 
     @GetMapping("/user/add")
     public String addUser(User bid, Model model) {
         logger.info("--- Method addUser ---");
-        model.addAttribute("pattern", patternInput);
+        // model.addAttribute("pattern", patternInput);
         return "user/add";
     }
 
@@ -52,10 +54,8 @@ public class UserController {
     public String validate(@Valid User user, BindingResult result, Model model) {
         logger.info("--- Method validate ---");
         if (!result.hasErrors()) {
-            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-            user.setPassword(encoder.encode(user.getPassword()));
-            userRepository.save(user);
-            model.addAttribute("users", userInt.getUserDTO("MULTIPLE", 0));
+            userService.saveUser(user);
+            model.addAttribute("users", userService.getAllUsers());
             return "redirect:/user/list";
         }
         return "user/add";
@@ -64,9 +64,7 @@ public class UserController {
     @GetMapping("/user/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         logger.info("--- Method showUpdateForm ---");
-        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
-        user.setPassword("");
-        model.addAttribute("user", user);
+        model.addAttribute("user", userService.getUsersById(id));
         return "user/update";
     }
 
@@ -74,25 +72,16 @@ public class UserController {
     public String updateUser(@PathVariable("id") Integer id, @Valid User user,
                              BindingResult result, Model model) {
         logger.info("--- Method updateUser ---");
-
-        if (result.hasErrors()) {
-            return "user/update";
-        }
-
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        user.setPassword(encoder.encode(user.getPassword()));
-        user.setId(id);
-        userRepository.save(user);
-        model.addAttribute("users", userRepository.findAll());
+        userService.updateUser(user, id);
+        model.addAttribute("users", userService.getAllUsers());
         return "redirect:/user/list";
     }
 
     @GetMapping("/user/delete/{id}")
     public String deleteUser(@PathVariable("id") Integer id, Model model) {
         logger.info("--- Method deleteUser ---");
-        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
-        userRepository.delete(user);
-        model.addAttribute("users", userRepository.findAll());
+        userService.deleteUserById(id);
+        model.addAttribute("users", userService.getAllUsers());
         return "redirect:/user/list";
     }
 }

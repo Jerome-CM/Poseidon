@@ -1,16 +1,13 @@
-package com.nnk.springboot.domain;
+package com.nnk.springboot.dto;
 
 import lombok.Data;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Data
-@Entity
-@Table(name = "curvepoint")
-public class CurvePoint {
+public class CurvePointDTO {
 
-    @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
     private Integer curveId;
     private Timestamp asOfDate;

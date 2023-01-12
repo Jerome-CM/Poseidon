@@ -1,6 +1,6 @@
 package com.nnk.springboot.config;
 
-import com.nnk.springboot.services.UserImpl;
+import com.nnk.springboot.services.UserServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.annotation.Bean;
@@ -22,21 +22,21 @@ import java.util.List;
 public class SpringSecurityConfig {
     private static final Logger logger = LogManager.getLogger(SpringSecurityConfig.class);
 
-    UserImpl userDetailsService;
+    UserServiceImpl userDetailsService;
 
     @Bean
     public SecurityFilterChain filterChain (HttpSecurity http) throws Exception {
          http.authorizeHttpRequests((requests) -> {
              try {
                  requests
-                        /* Access admin only */
+                        /* Access admin only
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")
+                        .requestMatchers("/user/**").hasAuthority("ADMIN")*/
                         /* Guest access */
                         .requestMatchers("/").permitAll()
                         .requestMatchers("/login").permitAll()
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
-                        .requestMatchers("/user/add").permitAll()
                         .anyRequest().authenticated()
                         .and()
                         .formLogin().loginPage("/login")
