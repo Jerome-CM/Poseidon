@@ -3,7 +3,6 @@ package com.nnk.springboot.domain;
 import lombok.Data;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 
 @Data
@@ -13,29 +12,29 @@ public class BidList {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    Integer BidListId;
+    private Integer bidListId;
     @NotBlank(message = "Account is mandatory")
-    String account;
+    private String account;
     @NotBlank(message = "Type is mandatory")
-    String type;
-    Double bidQuantity;
-    Double askQuantity;
-    Double bid;
-    Double ask;
-    String benchmark;
-    Timestamp bidListDate;
-    String commentary;
-    String security;
-    String status;
-    String trader;
-    String book;
-    String creationName;
-    Timestamp creationDate;
-    String revisionName;
-    Timestamp revisionDate;
-    String dealName;
-    String dealType;
-    String sourceListId;
-    String side;
+    private String type;
+    private Double bidQuantity;
+    private Double askQuantity;
+    private Double bid;
+    private Double ask;
+    private String benchmark;
+    private Timestamp bidListDate;
+    private String commentary;
+    private String security;
+    private String status;
+    private String trader;
+    private String book;
+    private String creationName;
+    private Timestamp creationDate;
+    private String revisionName;
+    private Timestamp revisionDate;
+    private String dealName;
+    private String dealType;
+    private String sourceListId;
+    private String side;
 
 }
