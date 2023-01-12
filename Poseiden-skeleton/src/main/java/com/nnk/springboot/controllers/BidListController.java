@@ -3,6 +3,7 @@ package com.nnk.springboot.controllers;
 import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.domain.User;
 import com.nnk.springboot.repositories.BidListRepository;
+import com.nnk.springboot.services.BidListService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -21,17 +22,17 @@ public class BidListController {
 
     private static final Logger logger = LogManager.getLogger(BidListController.class);
 
-    public final BidListRepository bidListRepository;
+    public final BidListService bidListService;
 
-    public BidListController(BidListRepository bidListRepository) {
-        this.bidListRepository = bidListRepository;
+    public BidListController(BidListService bidListService) {
+        this.bidListService = bidListService;
     }
 
     @RequestMapping("/bidList/list")
     public String home(Model model)
     {
         logger.info("--- Method home ---");
-        model.addAttribute("bidLists", bidListRepository.findAll());
+        model.addAttribute("bidLists", bidListService.getAllBidList());
         return "bidList/list";
     }
 
@@ -45,8 +46,8 @@ public class BidListController {
     public String validate(@Valid BidList bid, BindingResult result, Model model) {
         logger.info("--- Method validate ---");
         if (!result.hasErrors()) {
-            bidListRepository.save(bid);
-            model.addAttribute("bidLists", bidListRepository.findAll());
+            bidListService.saveBidList(bid);
+            model.addAttribute("bidLists", bidListService.getAllBidList());
             return "redirect:/user/list";
         }
         return "bidList/add";
@@ -55,8 +56,7 @@ public class BidListController {
     @GetMapping("/bidList/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         logger.info("--- Method showUpdateForm ---");
-        BidList bidList = bidListRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid bidList Id:" + id));
-        model.addAttribute("bidList", bidList);
+        model.addAttribute("bidList", bidListService.getBidListById(id));
         return "bidList/update";
     }
 
@@ -67,18 +67,16 @@ public class BidListController {
         if (result.hasErrors()) {
             return "bidList/update";
         }
-        bidList.setBidListId(id);
-        bidListRepository.save(bidList);
-        model.addAttribute("bidLists", bidListRepository.findAll());
+        bidListService.updateBidList(bidList, id);
+        model.addAttribute("bidLists", bidListService.getAllBidList());
        return "redirect:/bidList/list";
     }
 
     @GetMapping("/bidList/delete/{id}")
     public String deleteBid(@PathVariable("id") Integer id, Model model) {
         logger.info("--- Method deleteBid ---");
-        BidList bidList = bidListRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid bidList Id:" + id));
-        bidListRepository.delete(bidList);
-        model.addAttribute("bidLists", bidListRepository.findAll());
+        bidListService.deleteBidListById(id);
+        model.addAttribute("bidLists", bidListService.getAllBidList());
         return "redirect:/bidList/list";
     }
 }
