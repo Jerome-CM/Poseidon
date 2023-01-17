@@ -7,13 +7,14 @@ import javax.validation.constraints.Pattern;
 
 @Data
 @Entity
+// @NoArgsConstructor
 @Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
     @NotBlank(message = "Username is mandatory")
-
+    @Column(unique = true)
     private String username;
     @NotBlank(message = "Password is mandatory")
     @Pattern(regexp = "^(?=.[A-Z])(?=.\\d)(?=.[@$!%#?&])[A-Za-z\\d@$!%#?&]{8,}$")

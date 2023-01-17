@@ -1,12 +1,15 @@
 package com.nnk.springboot.domain;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
 import java.sql.Timestamp;
 
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name = "curvepoint")
 public class CurvePoint {
 

@@ -1,16 +1,19 @@
-package com.nnk.springboot.services;
+package com.nnk.springboot.services.implementation;
 
 import com.nnk.springboot.domain.Rating;
 import com.nnk.springboot.dto.RatingDTO;
 import com.nnk.springboot.repositories.RatingRepository;
+import com.nnk.springboot.services.RatingService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class RatingServiceImpl implements RatingService {
 
     private static final Logger logger = LogManager.getLogger(RatingServiceImpl.class);

@@ -1,16 +1,19 @@
-package com.nnk.springboot.services;
+package com.nnk.springboot.services.implementation;
 
 import com.nnk.springboot.domain.RuleName;
 import com.nnk.springboot.dto.RuleNameDTO;
 import com.nnk.springboot.repositories.RuleNameRepository;
+import com.nnk.springboot.services.RuleNameService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class RuleNameServiceImpl implements RuleNameService {
 
     private static final Logger logger = LogManager.getLogger(RuleNameServiceImpl.class);

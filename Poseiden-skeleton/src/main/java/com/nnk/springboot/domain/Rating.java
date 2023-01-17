@@ -1,10 +1,13 @@
 package com.nnk.springboot.domain;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
 
 @Data
+@NoArgsConstructor
 @Entity
 @Table(name = "rating")
 public class Rating {

@@ -1,13 +1,10 @@
 package com.nnk.springboot.controllers;
 
-import com.nnk.springboot.config.PatternInput;
 import com.nnk.springboot.domain.User;
-import com.nnk.springboot.dto.UserDTO;
 import com.nnk.springboot.repositories.UserRepository;
 import com.nnk.springboot.services.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -46,7 +43,6 @@ public class UserController {
     @GetMapping("/user/add")
     public String addUser(User bid, Model model) {
         logger.info("--- Method addUser ---");
-        // model.addAttribute("pattern", patternInput);
         return "user/add";
     }
 

@@ -5,7 +5,6 @@ import lombok.Data;
 import javax.persistence.*;
 
 @Data
-
 public class RatingDTO {
 
     private Integer id;

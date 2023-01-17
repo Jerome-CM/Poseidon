@@ -1,6 +1,6 @@
 package com.nnk.springboot.config;
 
-import com.nnk.springboot.services.UserServiceImpl;
+import com.nnk.springboot.services.implementation.UserServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import java.util.List;
 
-
+/*
 @Configuration
 @EnableWebSecurity
 public class SpringSecurityConfig {
@@ -32,7 +32,7 @@ public class SpringSecurityConfig {
                         /* Access admin only
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")
                         .requestMatchers("/user/**").hasAuthority("ADMIN")*/
-                        /* Guest access */
+                        /* Guest access
                         .requestMatchers("/").permitAll()
                         .requestMatchers("/login").permitAll()
                         .requestMatchers("/error").permitAll()
@@ -50,9 +50,9 @@ public class SpringSecurityConfig {
                                 session.setAttribute("mail", mail);
                             }
                             redirectStrategy.sendRedirect(request, response, "/");
-                        })*/
+                        })
                         .and()
-                        /* Show 403.html if access is denied, /error is a get controller */
+                        /* Show 403.html if access is denied, /error is a get controller
                         .exceptionHandling().accessDeniedPage("/error")
                         .and()
                         .logout()
@@ -80,3 +80,4 @@ public class SpringSecurityConfig {
                                 // FIXME confirm that
     }
 }
+*/
