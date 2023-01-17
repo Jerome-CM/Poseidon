@@ -2,6 +2,7 @@ package com.nnk.springboot.services.implementation;
 
 import com.nnk.springboot.domain.Rating;
 import com.nnk.springboot.dto.RatingDTO;
+import com.nnk.springboot.dto.response.ResponseDTO;
 import com.nnk.springboot.repositories.RatingRepository;
 import com.nnk.springboot.services.RatingService;
 import org.apache.logging.log4j.LogManager;
@@ -28,18 +29,20 @@ public class RatingServiceImpl implements RatingService {
     }
 
     @Override
-    public void saveRating(Rating rating){
+    public ResponseDTO saveRating(Rating rating){
         logger.info("--- Method saveRating ---");
         try{
             ratingRepository.save(rating);
             logger.info("Rating saved : {}", rating);
+            return new ResponseDTO(true, "Rating saved with success");
         } catch (Exception e){
             logger.error("Impossible to save a rating : {}", e.getMessage());
+            return new ResponseDTO(false, "Impossible to save a rating : " + e.getMessage());
         }
     }
 
     @Override
-    public RatingDTO updateRating(Rating rating, int id){
+    public ResponseDTO updateRating(Rating rating, int id){
         logger.info("--- Method updateRating ---");
         try {
             Rating ratingHandle = ratingRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid rating Id:" + id));
@@ -47,26 +50,28 @@ public class RatingServiceImpl implements RatingService {
             if (rating.getId() != null) {
                 ratingHandle = ratingRepository.save(rating);
                 logger.info("Rating updated : {}", ratingHandle);
-                return modelMapper.map(ratingHandle, RatingDTO.class);
+                return new ResponseDTO(true, "Rating updated with success");
             } else {
                 logger.error("Rating id is null with this id : {}", rating);
-                return null;
+                return new ResponseDTO(false, "Rating id is null with this id : " + id);
             }
         } catch (Exception e) {
             logger.error("Impossible to updated the rating : {}", e.getMessage());
-            return null;
+            return new ResponseDTO(false, "Impossible to update a rating : " + e.getMessage());
         }
     }
 
     @Override
-    public void deleteRatingById(int id) {
+    public ResponseDTO deleteRatingById(int id) {
         logger.info("--- Method deleteRatingById ---");
         try{
             Rating rating = ratingRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid rating Id:" + id));
             ratingRepository.delete(rating);
             logger.info("Rating deleted");
+            return new ResponseDTO(true, "Rating deleted with success");
         } catch (Exception e){
             logger.error("Impossible to delete the rating with this id({}) : {}",id, e.getMessage());
+            return new ResponseDTO(false, "Impossible to delete a rating : " + e.getMessage());
         }
     }
 

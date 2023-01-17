@@ -2,6 +2,7 @@ package com.nnk.springboot.services.implementation;
 
 import com.nnk.springboot.domain.RuleName;
 import com.nnk.springboot.dto.RuleNameDTO;
+import com.nnk.springboot.dto.response.ResponseDTO;
 import com.nnk.springboot.repositories.RuleNameRepository;
 import com.nnk.springboot.services.RuleNameService;
 import org.apache.logging.log4j.LogManager;
@@ -28,18 +29,20 @@ public class RuleNameServiceImpl implements RuleNameService {
     }
 
     @Override
-    public void saveRuleName(RuleName ruleName){
+    public ResponseDTO saveRuleName(RuleName ruleName){
         logger.info("--- Method saveRuleName ---");
         try{
             ruleNameRepository.save(ruleName);
             logger.info("RuleName saved : {}", ruleName);
+            return new ResponseDTO(true, "RuleName saved with success");
         } catch (Exception e){
             logger.error("Impossible to save a ruleName : {}", e.getMessage());
+            return new ResponseDTO(false, "Impossible to save a ruleName : " + e.getMessage());
         }
     }
 
     @Override
-    public RuleNameDTO updateRuleName(RuleName ruleName, int id){
+    public ResponseDTO updateRuleName(RuleName ruleName, int id){
         logger.info("--- Method updateRuleName ---");
         try {
             RuleName ruleNameHandle = ruleNameRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid ruleName Id:" + id));
@@ -47,26 +50,28 @@ public class RuleNameServiceImpl implements RuleNameService {
             if (ruleName.getId() != null) {
                 ruleNameHandle = ruleNameRepository.save(ruleName);
                 logger.info("RuleName updated : {}", ruleNameHandle);
-                return modelMapper.map(ruleNameHandle, RuleNameDTO.class);
+                return new ResponseDTO(true, "RuleName updated with success");
             } else {
                 logger.error("RuleName id is null with this id : {}", ruleName);
-                return null;
+                return new ResponseDTO(false, "RuleName id is null with this id : " + id);
             }
         } catch (Exception e) {
             logger.error("Impossible to updated the ruleName : {}", e.getMessage());
-            return null;
+            return new ResponseDTO(false, "Impossible to update this ruleName : " + e.getMessage());
         }
     }
 
     @Override
-    public void deleteRuleNameById(int id) {
+    public ResponseDTO deleteRuleNameById(int id) {
         logger.info("--- Method deleteRuleNameById ---");
         try{
             RuleName ruleName = ruleNameRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid ruleName Id:" + id));
             ruleNameRepository.delete(ruleName);
             logger.info("RuleName deleted");
+            return new ResponseDTO(true, "RuleName deleted with success");
         } catch (Exception e){
             logger.error("Impossible to delete the ruleName with this id({}) : {}",id, e.getMessage());
+            return new ResponseDTO(false, "Impossible to delete this ruleName : " + e.getMessage());
         }
     }
 

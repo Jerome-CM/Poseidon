@@ -2,6 +2,7 @@ package com.nnk.springboot.services.implementation;
 
 import com.nnk.springboot.domain.CurvePoint;
 import com.nnk.springboot.dto.CurvePointDTO;
+import com.nnk.springboot.dto.response.ResponseDTO;
 import com.nnk.springboot.repositories.CurvePointRepository;
 import com.nnk.springboot.services.CurvePointService;
 import org.apache.logging.log4j.LogManager;
@@ -28,18 +29,20 @@ public class CurvePointServiceImpl implements CurvePointService {
     }
 
     @Override
-    public void saveCurvePoint(CurvePoint curvePoint){
+    public ResponseDTO saveCurvePoint(CurvePoint curvePoint){
         logger.info("--- Method saveCurvePoint ---");
         try{
             curvePointRepository.save(curvePoint);
             logger.info("CurvePoint saved : {}", curvePoint);
+            return new ResponseDTO(true, "CurvePoint saved with success");
         } catch (Exception e){
             logger.error("Impossible to save a curvePoint : {}", e.getMessage());
+            return new ResponseDTO(false, "Impossible to save a curvePoint : " + e.getMessage());
         }
     }
 
     @Override
-    public CurvePointDTO updateCurvePoint(CurvePoint curvePoint, int id){
+    public ResponseDTO updateCurvePoint(CurvePoint curvePoint, int id){
         logger.info("--- Method updateCurvePoint ---");
         try {
             CurvePoint curvePointHandle = curvePointRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid curvePoint Id:" + id));
@@ -47,26 +50,28 @@ public class CurvePointServiceImpl implements CurvePointService {
             if (curvePoint.getId() != null) {
                 curvePointHandle = curvePointRepository.save(curvePoint);
                 logger.info("CurvePoint updated : {}", curvePointHandle);
-                return modelMapper.map(curvePointHandle, CurvePointDTO.class);
+                return new ResponseDTO(true, "CurvePoint updated with success");
             } else {
                 logger.error("CurvePoint id is null with this id : {}", curvePoint);
-                return null;
+                return new ResponseDTO(false, "CurvePoint id is null with this id : " + id);
             }
         } catch (Exception e) {
             logger.error("Impossible to updated the curvePoint : {}", e.getMessage());
-            return null;
+            return new ResponseDTO(false, "Impossible to save a curvePoint : " + e.getMessage());
         }
     }
 
     @Override
-    public void deleteCurvePointById(int id) {
+    public ResponseDTO deleteCurvePointById(int id) {
         logger.info("--- Method deleteCurvePointById ---");
         try{
             CurvePoint curvePoint = curvePointRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid curvePoint Id:" + id));
             curvePointRepository.delete(curvePoint);
             logger.info("CurvePoint deleted");
+            return new ResponseDTO(true, "CurvePoint deleted with success");
         } catch (Exception e){
             logger.error("Impossible to delete the curvePoint with this id({}) : {}",id, e.getMessage());
+            return new ResponseDTO(false, "Impossible to delete a curvePoint : " + e.getMessage());
         }
     }
 

@@ -2,6 +2,7 @@ package com.nnk.springboot.services.implementation;
 
 import com.nnk.springboot.domain.Trade;
 import com.nnk.springboot.dto.TradeDTO;
+import com.nnk.springboot.dto.response.ResponseDTO;
 import com.nnk.springboot.repositories.TradeRepository;
 import com.nnk.springboot.services.TradeService;
 import org.apache.logging.log4j.LogManager;
@@ -28,18 +29,20 @@ public class TradeServiceImpl implements TradeService {
     }
 
     @Override
-    public void saveTrade(Trade trade){
+    public ResponseDTO saveTrade(Trade trade){
         logger.info("--- Method saveTrade ---");
         try{
             tradeRepository.save(trade);
             logger.info("Trade saved : {}", trade);
+            return new ResponseDTO(true, "Trade saved with success");
         } catch (Exception e){
             logger.error("Impossible to save a trade : {}", e.getMessage());
+            return new ResponseDTO(false, "Trade saved with success");
         }
     }
 
     @Override
-    public TradeDTO updateTrade(Trade trade, int id){
+    public ResponseDTO updateTrade(Trade trade, int id){
         logger.info("--- Method updateTrade ---");
         try {
             Trade tradeHandle = tradeRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid trade Id:" + id));
@@ -47,26 +50,28 @@ public class TradeServiceImpl implements TradeService {
             if (trade.getTradeId() != null) {
                 tradeHandle = tradeRepository.save(trade);
                 logger.info("Trade updated : {}", tradeHandle);
-                return modelMapper.map(tradeHandle, TradeDTO.class);
+                return new ResponseDTO(true, "Trade saved with success");
             } else {
                 logger.error("Trade id is null with this id : {}", trade);
-                return null;
+                return new ResponseDTO(false, "Trade id is null with this id " + id);
             }
         } catch (Exception e) {
             logger.error("Impossible to updated the trade : {}", e.getMessage());
-            return null;
+            return new ResponseDTO(false, "Impossible to updated the trade : " + e.getMessage());
         }
     }
 
     @Override
-    public void deleteTradeById(int id) {
+    public ResponseDTO deleteTradeById(int id) {
         logger.info("--- Method deleteTradebyId ---");
         try{
             Trade trade = tradeRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid trade Id:" + id));
             tradeRepository.delete(trade);
             logger.info("Trade deleted");
+            return new ResponseDTO(true, "Trade deleted with success");
         } catch (Exception e){
             logger.error("Impossible to delete the trade with this id({}) : {}",id, e.getMessage());
+            return new ResponseDTO(false, "Impossible to deleted the trade : " + e.getMessage());
         }
     }
 

@@ -2,6 +2,7 @@ package com.nnk.springboot.services.implementation;
 
 import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.dto.BidListDTO;
+import com.nnk.springboot.dto.response.ResponseDTO;
 import com.nnk.springboot.repositories.BidListRepository;
 import com.nnk.springboot.services.BidListService;
 import org.apache.logging.log4j.LogManager;
@@ -28,18 +29,20 @@ public class BidListServiceImpl implements BidListService {
     }
 
     @Override
-    public void saveBidList(BidList bidList){
+    public ResponseDTO saveBidList(BidList bidList){
         logger.info("--- Method saveBidList ---");
         try{
             bidListRepository.save(bidList);
             logger.info("BidList saved : {}", bidList);
+            return new ResponseDTO(true, "bidList saved with success");
         } catch (Exception e){
             logger.error("Impossible to save a bidList : {}", e.getMessage());
+            return new ResponseDTO(false, "Impossible to save a bidList : " + e.getMessage());
         }
     }
 
     @Override
-    public BidListDTO updateBidList(BidList bidList, int id){
+    public ResponseDTO updateBidList(BidList bidList, int id){
         logger.info("--- Method updateBidList ---");
         try {
             BidList bidListHandle = bidListRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid bidList Id:" + id));
@@ -47,26 +50,28 @@ public class BidListServiceImpl implements BidListService {
             if (bidList.getBidListId() != null) {
                 bidListHandle = bidListRepository.save(bidList);
                 logger.info("BidList updated : {}", bidListHandle);
-                return modelMapper.map(bidListHandle, BidListDTO.class);
+                return new ResponseDTO(true, "bidList updated with success");
             } else {
                 logger.error("BidList id is null with this id : {}", bidList);
-                return null;
+                return new ResponseDTO(false, "BidList id is null with this id : " + id);
             }
         } catch (Exception e) {
             logger.error("Impossible to updated the bidList : {}", e.getMessage());
-            return null;
+            return new ResponseDTO(false, "Impossible to update a bidList : " + e.getMessage());
         }
     }
 
     @Override
-    public void deleteBidListById(int id) {
+    public ResponseDTO deleteBidListById(int id) {
         logger.info("--- Method deleteBidListById ---");
         try{
             BidList bidList = bidListRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid bidList Id:" + id));
             bidListRepository.delete(bidList);
             logger.info("BidList deleted");
+            return new ResponseDTO(true, "bidList deleted with success");
         } catch (Exception e){
             logger.error("Impossible to delete the bidList with this id({}) : {}",id, e.getMessage());
+            return new ResponseDTO(false, "Impossible to delete a bidList : " + e.getMessage());
         }
     }
 
