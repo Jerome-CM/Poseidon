@@ -33,8 +33,9 @@ public class TradeController {
     }
 
     @GetMapping("/trade/add")
-    public String addUser(Trade bid) {
+    public String addUser(Trade bid, Model model) {
         logger.info("--- Method addTrade ---");
+        model.addAttribute("trade", bid);
         return "trade/add";
     }
 
@@ -42,7 +43,7 @@ public class TradeController {
     public String validate(@Valid Trade trade, BindingResult result, Model model) {
         logger.info("--- Method validate ---");
         if (!result.hasErrors()) {
-            tradeService.saveTrade(trade);
+            model.addAttribute("response", tradeService.saveTrade(trade));
             model.addAttribute("trades", tradeService.getAllTrade());
             return "redirect:/trade/list";
         }
@@ -64,7 +65,7 @@ public class TradeController {
         if (result.hasErrors()) {
             return "trade/update";
         }
-        tradeService.updateTrade(trade, id);
+        model.addAttribute("response", tradeService.updateTrade(trade, id));
         model.addAttribute("trades", tradeService.getAllTrade());
         return "redirect:/trade/list";
     }
@@ -72,7 +73,7 @@ public class TradeController {
     @GetMapping("/trade/delete/{id}")
     public String deleteTrade(@PathVariable("id") Integer id, Model model) {
         logger.info("--- Method deleteTrade ---");
-        tradeService.deleteTradeById(id);
+        model.addAttribute("response", tradeService.deleteTradeById(id));
         model.addAttribute("trades", tradeService.getAllTrade());
         return "redirect:/trade/list";
     }

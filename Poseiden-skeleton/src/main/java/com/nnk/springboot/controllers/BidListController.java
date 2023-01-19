@@ -44,7 +44,7 @@ public class BidListController {
     public String validate(@Valid BidList bid, BindingResult result, Model model) {
         logger.info("--- Method validate ---");
         if (!result.hasErrors()) {
-            bidListService.saveBidList(bid);
+            model.addAttribute("response", bidListService.saveBidList(bid));
             model.addAttribute("bidLists", bidListService.getAllBidList());
             return "redirect:/user/list";
         }
@@ -65,7 +65,7 @@ public class BidListController {
         if (result.hasErrors()) {
             return "bidList/update";
         }
-        bidListService.updateBidList(bidList, id);
+        model.addAttribute("response", bidListService.updateBidList(bidList, id));
         model.addAttribute("bidLists", bidListService.getAllBidList());
        return "redirect:/bidList/list";
     }
@@ -73,7 +73,7 @@ public class BidListController {
     @GetMapping("/bidList/delete/{id}")
     public String deleteBid(@PathVariable("id") Integer id, Model model) {
         logger.info("--- Method deleteBid ---");
-        bidListService.deleteBidListById(id);
+        model.addAttribute("response", bidListService.deleteBidListById(id));
         model.addAttribute("bidLists", bidListService.getAllBidList());
         return "redirect:/bidList/list";
     }

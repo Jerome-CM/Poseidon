@@ -44,7 +44,7 @@ public class RuleNameController {
     public String validate(@Valid RuleName ruleName, BindingResult result, Model model) {
         logger.info("--- Method validate ---");
         if (!result.hasErrors()) {
-            ruleNameService.saveRuleName(ruleName);
+            model.addAttribute("response", ruleNameService.saveRuleName(ruleName));
             model.addAttribute("ruleNames", ruleNameService.getAllRuleName());
             return "ruleName/list";
         }
@@ -64,14 +64,14 @@ public class RuleNameController {
         if (result.hasErrors()) {
             return "ruleName/update";
         }
-        ruleNameService.updateRuleName(ruleName, id);
+        model.addAttribute("response", ruleNameService.updateRuleName(ruleName, id));
         model.addAttribute("ruleNames", ruleNameService.getAllRuleName());
         return "redirect:/ruleName/list";
     }
 
     @GetMapping("/ruleName/delete/{id}")
     public String deleteRuleName(@PathVariable("id") Integer id, Model model) {
-        ruleNameService.deleteRuleNameById(id);
+        model.addAttribute("response", ruleNameService.deleteRuleNameById(id));
         model.addAttribute("ruleNames", ruleNameService.getAllRuleName());
         return "redirect:/ruleName/list";
     }

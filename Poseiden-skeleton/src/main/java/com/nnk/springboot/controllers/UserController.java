@@ -43,6 +43,7 @@ public class UserController {
     @GetMapping("/user/add")
     public String addUser(User bid, Model model) {
         logger.info("--- Method addUser ---");
+        model.addAttribute("user", bid);
         return "user/add";
     }
 
@@ -50,7 +51,7 @@ public class UserController {
     public String validate(@Valid User user, BindingResult result, Model model) {
         logger.info("--- Method validate ---");
         if (!result.hasErrors()) {
-            userService.saveUser(user);
+            model.addAttribute("response", userService.saveUser(user));
             model.addAttribute("users", userService.getAllUsers());
             return "redirect:/user/list";
         }
@@ -68,7 +69,7 @@ public class UserController {
     public String updateUser(@PathVariable("id") Integer id, @Valid User user,
                              BindingResult result, Model model) {
         logger.info("--- Method updateUser ---");
-        userService.updateUser(user, id);
+        model.addAttribute("response", userService.updateUser(user, id));
         model.addAttribute("users", userService.getAllUsers());
         return "redirect:/user/list";
     }
@@ -76,7 +77,7 @@ public class UserController {
     @GetMapping("/user/delete/{id}")
     public String deleteUser(@PathVariable("id") Integer id, Model model) {
         logger.info("--- Method deleteUser ---");
-        userService.deleteUserById(id);
+        model.addAttribute("response", userService.deleteUserById(id));
         model.addAttribute("users", userService.getAllUsers());
         return "redirect:/user/list";
     }

@@ -43,7 +43,7 @@ public class CurveController {
     public String validate(@Valid CurvePoint curvePoint, BindingResult result, Model model) {
         logger.info("--- Method validate ---");
         if (!result.hasErrors()) {
-            curvePointService.saveCurvePoint(curvePoint);
+            model.addAttribute("response", curvePointService.saveCurvePoint(curvePoint));
             model.addAttribute("curvePoints", curvePointService.getAllCurvePoint());
             return "redirect:/user/list";
         }
@@ -64,7 +64,7 @@ public class CurveController {
         if (result.hasErrors()) {
             return "curvePoint/update";
         }
-        curvePointService.updateCurvePoint(curvePoint, id);
+        model.addAttribute("response", curvePointService.updateCurvePoint(curvePoint, id));
         model.addAttribute("curvePoints", curvePointService.getAllCurvePoint());
         return "redirect:/curvePoint/list";
     }
@@ -72,7 +72,7 @@ public class CurveController {
     @GetMapping("/curvePoint/delete/{id}")
     public String deleteBid(@PathVariable("id") Integer id, Model model) {
         logger.info("--- Method deleteBid ---");
-        curvePointService.deleteCurvePointById(id);
+        model.addAttribute("response", curvePointService.deleteCurvePointById(id));
         model.addAttribute("curvePoints", curvePointService.getAllCurvePoint());
         return "redirect:/curvePoint/list";
     }
