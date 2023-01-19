@@ -44,7 +44,7 @@ public class BidList {
     private String trader = "trader";
     private String book = "book";
     private String creationName = "creationName";
-    @Column(columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
+    @Column(columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP", updatable = false)
     private Timestamp creationDate;
     private String revisionName = "revisionName";
     @Column(columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
