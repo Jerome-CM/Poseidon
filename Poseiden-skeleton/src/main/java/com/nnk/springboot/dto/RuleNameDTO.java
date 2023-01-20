@@ -2,8 +2,6 @@ package com.nnk.springboot.dto;
 
 import lombok.Data;
 
-import javax.persistence.*;
-
 @Data
 public class RuleNameDTO {
 

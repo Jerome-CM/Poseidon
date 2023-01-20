@@ -1,11 +1,13 @@
 package com.nnk.springboot.domain;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+
 import java.sql.Timestamp;
 
 @Data
