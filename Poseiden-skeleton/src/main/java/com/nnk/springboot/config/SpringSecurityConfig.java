@@ -16,7 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import java.util.List;
 
-/*
+
 @Configuration
 @EnableWebSecurity
 public class SpringSecurityConfig {
@@ -29,10 +29,10 @@ public class SpringSecurityConfig {
          http.authorizeHttpRequests((requests) -> {
              try {
                  requests
-                        /* Access admin only
+                        /* Access admin only */
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")
-                        .requestMatchers("/user/**").hasAuthority("ADMIN")*/
-                        /* Guest access
+                        .requestMatchers("/user/**").hasAuthority("ADMIN")
+                        /* Guest access */
                         .requestMatchers("/").permitAll()
                         .requestMatchers("/login").permitAll()
                         .requestMatchers("/error").permitAll()
@@ -40,23 +40,12 @@ public class SpringSecurityConfig {
                         .anyRequest().authenticated()
                         .and()
                         .formLogin().loginPage("/login")
-                        /*Take the mail in the session after success login*/
-                        /*.successHandler((request, response, authentication) -> {
-                            HttpSession session = request.getSession();
-                            RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
-                            if(session.getAttribute("mail") == null){
-                                String mail = authentication.getName();
-                                logger.info("Handler Auth mail : {}", mail);
-                                session.setAttribute("mail", mail);
-                            }
-                            redirectStrategy.sendRedirect(request, response, "/");
-                        })
                         .and()
-                        /* Show 403.html if access is denied, /error is a get controller
+                        /* Show 403.html if access is denied, /error is a get controller */
                         .exceptionHandling().accessDeniedPage("/error")
                         .and()
                         .logout()
-                        .logoutSuccessUrl("/login")
+                        .logoutSuccessUrl("/")
                         .invalidateHttpSession(true);
              } catch (Exception e) {
                  logger.info("--- Fail to filterchain ---");
@@ -76,8 +65,6 @@ public class SpringSecurityConfig {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(passwordEncoder());
         provider.setUserDetailsService(userDetailsService);
-        return new ProviderManager((List<AuthenticationProvider>) provider);
-                                // FIXME confirm that
+        return new ProviderManager(provider);
     }
 }
-*/
