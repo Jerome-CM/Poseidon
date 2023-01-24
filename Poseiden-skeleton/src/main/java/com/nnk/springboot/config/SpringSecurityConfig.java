@@ -16,6 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import java.util.List;
 
+/*
 
 @Configuration
 @EnableWebSecurity
@@ -29,10 +30,10 @@ public class SpringSecurityConfig {
          http.authorizeHttpRequests((requests) -> {
              try {
                  requests
-                        /* Access admin only */
+                        /* Access admin only
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")
                         .requestMatchers("/user/**").hasAuthority("ADMIN")
-                        /* Guest access */
+                        /* Guest access
                         .requestMatchers("/").permitAll()
                         .requestMatchers("/login").permitAll()
                         .requestMatchers("/error").permitAll()
@@ -41,7 +42,7 @@ public class SpringSecurityConfig {
                         .and()
                         .formLogin().loginPage("/login")
                         .and()
-                        /* Show 403.html if access is denied, /error is a get controller */
+                        /* Show 403.html if access is denied, /error is a get controller
                         .exceptionHandling().accessDeniedPage("/error")
                         .and()
                         .logout()
@@ -68,3 +69,4 @@ public class SpringSecurityConfig {
         return new ProviderManager(provider);
     }
 }
+*/

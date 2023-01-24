@@ -3,8 +3,8 @@ package com.nnk.springboot.domain;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Pattern;
+import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 
 @Data
 @NoArgsConstructor
