@@ -1,0 +1,8 @@
+<div th:if="${response}">
+<!-- Success message -->
+<a class="btn btn-success" th:if="${response.status == true}" >${response.message}</a>
+<!-- Error message -->
+<a class="btn btn-danger" th:if="${response.status == false}" >${response.message}</a>
+
+</div>
+<p>Test display Text Notification</p>
