@@ -28,14 +28,14 @@ public class SpringSecurityConfig {
                 .antMatchers("/admin/**").hasAuthority("ADMIN")
                 .antMatchers("/user/**").hasAuthority("ADMIN")
                 /* Guest access */
-                .antMatchers("/login").permitAll()
+                .antMatchers("login").permitAll()
                 .antMatchers("/").permitAll()
                 .antMatchers("/error").permitAll()
                 .antMatchers("/CSS/**").permitAll()
                 .antMatchers("/swagger-ui/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .formLogin().loginPage("/login")
+                .formLogin().loginPage("login")
                 .and()
                 /* Show 403.html if access is denied, /error is a get controller */
                 .exceptionHandling().accessDeniedPage("/error")
