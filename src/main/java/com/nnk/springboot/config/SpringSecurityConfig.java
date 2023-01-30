@@ -25,23 +25,24 @@ public class SpringSecurityConfig {
     public SecurityFilterChain filterChain (HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests()
                 /* Access admin only */
-                .antMatchers("/admin/**").hasAuthority("ADMIN")
-                .antMatchers("/user/**").hasAuthority("ADMIN")
+                //.antMatchers("/admin/**").hasAuthority("ADMIN")
+                //.antMatchers("/user/**").hasAuthority("ADMIN")
                 /* Guest access */
-                .antMatchers("login").permitAll()
+                .antMatchers("/app/login").permitAll()
                 .antMatchers("/").permitAll()
-                .antMatchers("/error").permitAll()
+                .antMatchers("/app/error").permitAll()
                 .antMatchers("/CSS/**").permitAll()
                 .antMatchers("/swagger-ui/**").permitAll()
-                .anyRequest().authenticated()
+                /* URL access */
+                //.anyRequest().authenticated()
                 .and()
-                .formLogin().loginPage("login")
+                .formLogin().loginPage("/app/login")
                 .and()
                 /* Show 403.html if access is denied, /error is a get controller */
-                .exceptionHandling().accessDeniedPage("/error")
+                .exceptionHandling().accessDeniedPage("/app/error")
                 .and()
                 .logout()
-                .logoutSuccessUrl("/login")
+                .logoutSuccessUrl("/app/login")
                 .and()
                 .build();
     }
