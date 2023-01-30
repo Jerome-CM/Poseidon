@@ -7,7 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Pattern;
 
 @Data
- 
+@NoArgsConstructor
 @Entity
 @Table(name = "rating")
 public class Rating {
@@ -26,7 +26,7 @@ public class Rating {
 
     private String fitchRating = "fitchRating";
 
-    @Pattern(regexp = "^([1-9]|[1-9][0-9]{0,9})$")
+    //@Pattern(regexp = "^([1-9]|[1-9][0-9]{0,9})$")
     private Integer orderNumber = 0;
 
 }
