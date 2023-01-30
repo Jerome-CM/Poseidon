@@ -8,6 +8,7 @@
 </head>
 <body>
 <div class="container">
+	<div th:replace="notification.html"></div>
 	<div class="row">
 		<h2>Update Trade</h2>
 	</div>
@@ -85,7 +86,7 @@
 				</div>
 			</div>
 			<div class="form-group">
-				<label for="trader" class="col-sm-2 control-label">tTader</label>
+				<label for="trader" class="col-sm-2 control-label">Trader</label>
 				<div class="col-sm-10">
 					<input type="text" th:field="*{trader}" id="trader" placeholder="Trader" class="col-4">
 					<p class="text-danger" th:if="${#fields.hasErrors('trader')}" th:errors="*{trader}"></p>
@@ -94,7 +95,7 @@
 			<div class="form-group">
 				<label for="book" class="col-sm-2 control-label">Book</label>
 				<div class="col-sm-10">
-					<input type="text" th:field="*{book}" id="account" placeholder="Book" class="col-4">
+					<input type="text" th:field="*{book}" id="book" placeholder="Book" class="col-4">
 					<p class="text-danger" th:if="${#fields.hasErrors('book')}" th:errors="*{book}"></p>
 				</div>
 			</div>
@@ -102,7 +103,7 @@
 				<label for="creationName" class="col-sm-2 control-label">Creation name</label>
 				<div class="col-sm-10">
 					<input type="text" th:field="*{creationName}" id="creationName" placeholder="Creation name" class="col-4">
-					<p class="text-danger" th:if="${#fields.hasErrors('account')}" th:errors="*{creationName}"></p>
+					<p class="text-danger" th:if="${#fields.hasErrors('creationName')}" th:errors="*{creationName}"></p>
 				</div>
 			</div>
 			<div class="form-group">

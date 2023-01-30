@@ -8,6 +8,9 @@
 </head>
 <body>
 <div class="container">
+
+	<div th:replace="notification.html"></div>
+
 	<div class="row">
 		<div class="col-6">
 			<a href="/bidList/list">Bid List</a>&nbsp;|&nbsp;
@@ -45,8 +48,8 @@
 				<td th:text="${rating.fitchRating}"></td>
 				<td th:text="${rating.orderNumber}"></td>
 				<td style="width: 15%" class="text-center">
-					<a th:href="@{/ruleName/update/{id}(id=${rating.id})}">Edit</a>&nbsp;|&nbsp;
-					<a th:href="@{/ruleName/delete/{id}(id=${rating.id})}">Delete</a>
+					<a th:href="@{/rating/update/{id}(id=${rating.id})}">Edit</a>&nbsp;|
+					<a th:href="@{/rating/delete/{id}(id=${rating.id})}">Delete</a>
 				</td>
 			</tr>
 			</tbody>

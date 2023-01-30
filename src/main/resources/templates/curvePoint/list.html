@@ -8,6 +8,9 @@
 </head>
 <body>
 <div class="container">
+
+	<div th:replace="notification.html"></div>
+
 	<div class="row">
 		<div class="col-6">
 			<a href="/bidList/list">Bid List</a>&nbsp;|&nbsp;
@@ -43,7 +46,7 @@
 				<td th:text="${curvePoint.term}"></td>
 				<td style="width: 25%" th:text="${curvePoint.value}"></td>
 				<td style="width: 15%" class="text-center">
-					<a th:href="@{/curvePoint/update/{id}(id=${curvePoint.id})}">Edit</a>&nbsp;|&nbsp;
+					<a th:href="@{/curvePoint/update/{id}(id=${curvePoint.id})}">Edit</a>&nbsp;|
 					<a th:href="@{/curvePoint/delete/{id}(id=${curvePoint.id})}">Delete</a>
 				</td>
 			</tr>
