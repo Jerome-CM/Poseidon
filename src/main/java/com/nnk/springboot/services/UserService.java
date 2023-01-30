@@ -21,4 +21,6 @@ public interface UserService {
 
     public UserDTO getUsersById(int id);
 
+    public boolean isTheUsernameAvailable(String username);
+
 }

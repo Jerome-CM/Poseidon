@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -25,11 +26,13 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     private final UserRepository userRepository;
 
+    private final PasswordEncoder passwordEncoder;
 
     private final ModelMapper modelMapper;
 
-    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, ModelMapper modelMapper) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
         this.modelMapper = modelMapper;
     }
 
@@ -55,8 +58,15 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Override
     public ResponseDTO saveUser(User user){
         logger.info("--- Method saveUser ---");
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        user.setPassword(encoder.encode(user.getPassword()));
+        //BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        // the username is available ?
+        if(!isTheUsernameAvailable(user.getUsername())){
+            logger.error("The username isn't available : {}", user.getUsername());
+            return new ResponseDTO(false, "This username isn't available");
+        }
+
         try{
             userRepository.save(user);
             logger.info("User saved : {}", user);
@@ -72,14 +82,49 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     public ResponseDTO updateUser(User user, int id){
 
         logger.info("--- Method updateUser ---");
-        try {
-            user.setId(id);
-            User userUpdate = userRepository.save(user);
-            logger.info("User updated : {}", userUpdate);
-            return new ResponseDTO(true, "User updated with success");
-                   } catch (Exception e) {
-            logger.error("Impossible to updated the user : {}", e.getMessage());
-            return new ResponseDTO(false, "Impossible to update the user : " + e.getMessage());
+        Optional<User> userWithIdJoin = userRepository.findById(id);
+        int userJoinGetId = userWithIdJoin.get().getId();
+
+        if(userJoinGetId == user.getId()){
+
+            // the username is available ?
+            if(!userWithIdJoin.get().getUsername().equals(user.getUsername())){
+                if(!isTheUsernameAvailable(user.getUsername())){
+                    logger.error("The username isn't available : {}", user.getUsername());
+                    return new ResponseDTO(false, "This username isn't available");
+                }
+            }
+
+            // The password has he changed ?
+            if(user.getPassword().isEmpty()){
+                String username = user.getUsername();
+                String fullname = user.getFullname();
+                String role = user.getRole();
+
+                try{
+                    userRepository.saveWithoutPassword(username, fullname, role, id);
+                    logger.info("User updated : {}", user);
+                    return new ResponseDTO(true, "User updated with success");
+                } catch (Exception e){
+                    logger.error("Impossible to updated the user : {}", e.getMessage());
+                    return new ResponseDTO(false, "Impossible to update the user : " + e.getMessage());
+                }
+
+            } else {
+
+                try {
+                    user.setId(id);
+                    user.setPassword(passwordEncoder.encode(user.getPassword()));
+                    User userUpdate = userRepository.save(user);
+                    logger.info("User updated : {}", userUpdate);
+                    return new ResponseDTO(true, "User updated with success");
+                } catch (Exception e) {
+                    logger.error("Impossible to updated the user : {}", e.getMessage());
+                    return new ResponseDTO(false, "Impossible to update the user : " + e.getMessage());
+                }
+            }
+        } else {
+            return new ResponseDTO(false, "The IDs is different");
         }
     }
 
@@ -140,6 +185,16 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return null;
     }
 
+    /**
+     * return if the new username is available in the DB
+     * @param username
+     * @return boolean
+     */
+    public boolean isTheUsernameAvailable(String username) {
+        Optional<User> userFinded = Optional.ofNullable(userRepository.findByUsername(username));
+        boolean usernameIsAvailable = userFinded.isPresent() ? false : true;
+        return usernameIsAvailable;
+    }
 
 
 
