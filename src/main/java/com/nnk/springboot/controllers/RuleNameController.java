@@ -66,13 +66,13 @@ public class RuleNameController {
         }
         model.addAttribute("response", ruleNameService.updateRuleName(ruleName, id));
         model.addAttribute("ruleNames", ruleNameService.getAllRuleName());
-        return "redirect:/ruleName/list";
+        return "/ruleName/list";
     }
 
     @GetMapping("/ruleName/delete/{id}")
     public String deleteRuleName(@PathVariable("id") Integer id, Model model) {
         model.addAttribute("response", ruleNameService.deleteRuleNameById(id));
         model.addAttribute("ruleNames", ruleNameService.getAllRuleName());
-        return "redirect:/ruleName/list";
+        return "/ruleName/list";
     }
 }

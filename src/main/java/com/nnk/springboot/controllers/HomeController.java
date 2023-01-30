@@ -21,7 +21,7 @@ public class HomeController
 	public String adminHome(Model model)
 	{
 		logger.info("--- Method home Admin ---");
-		return "redirect:/bidList/list";
+		return "/bidList/list";
 	}
 
 

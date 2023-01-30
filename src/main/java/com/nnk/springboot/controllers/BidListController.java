@@ -35,8 +35,9 @@ public class BidListController {
     }
 
     @GetMapping("/bidList/add")
-    public String addBidForm(BidList bid) {
+    public String addBidForm(BidList bid, Model model) {
         logger.info("--- Method addBidForm ---");
+        model.addAttribute("bidList", bid);
         return "bidList/add";
     }
 
@@ -46,7 +47,7 @@ public class BidListController {
         if (!result.hasErrors()) {
             model.addAttribute("response", bidListService.saveBidList(bid));
             model.addAttribute("bidLists", bidListService.getAllBidList());
-            return "redirect:/user/list";
+            return "/user/list";
         }
         return "bidList/add";
     }
@@ -67,7 +68,7 @@ public class BidListController {
         }
         model.addAttribute("response", bidListService.updateBidList(bidList, id));
         model.addAttribute("bidLists", bidListService.getAllBidList());
-       return "redirect:/bidList/list";
+       return "/bidList/list";
     }
 
     @GetMapping("/bidList/delete/{id}")
@@ -75,6 +76,6 @@ public class BidListController {
         logger.info("--- Method deleteBid ---");
         model.addAttribute("response", bidListService.deleteBidListById(id));
         model.addAttribute("bidLists", bidListService.getAllBidList());
-        return "redirect:/bidList/list";
+        return "/bidList/list";
     }
 }

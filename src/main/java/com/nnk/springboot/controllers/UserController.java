@@ -1,6 +1,7 @@
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.User;
+import com.nnk.springboot.dto.response.ResponseDTO;
 import com.nnk.springboot.repositories.UserRepository;
 import com.nnk.springboot.services.UserService;
 import org.apache.logging.log4j.LogManager;
@@ -53,8 +54,9 @@ public class UserController {
         if (!result.hasErrors()) {
             model.addAttribute("response", userService.saveUser(user));
             model.addAttribute("users", userService.getAllUsers());
-            return "redirect:/user/list";
+            return "/user/list";
         }
+        model.addAttribute("response", new ResponseDTO(false, "Error with the form"));
         return "user/add";
     }
 
@@ -71,7 +73,7 @@ public class UserController {
         logger.info("--- Method updateUser ---");
         model.addAttribute("response", userService.updateUser(user, id));
         model.addAttribute("users", userService.getAllUsers());
-        return "redirect:/user/list";
+        return "/user/list";
     }
 
     @GetMapping("/user/delete/{id}")
@@ -79,6 +81,6 @@ public class UserController {
         logger.info("--- Method deleteUser ---");
         model.addAttribute("response", userService.deleteUserById(id));
         model.addAttribute("users", userService.getAllUsers());
-        return "redirect:/user/list";
+        return "/user/list";
     }
 }

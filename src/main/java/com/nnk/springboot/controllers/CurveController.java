@@ -34,8 +34,9 @@ public class CurveController {
     }
 
     @GetMapping("/curvePoint/add")
-    public String addBidForm(CurvePoint bid) {
+    public String addBidForm(CurvePoint curve, Model model) {
         logger.info("--- Method addBidForm ---");
+        model.addAttribute("curvePoint", curve);
         return "curvePoint/add";
     }
 
@@ -45,7 +46,7 @@ public class CurveController {
         if (!result.hasErrors()) {
             model.addAttribute("response", curvePointService.saveCurvePoint(curvePoint));
             model.addAttribute("curvePoints", curvePointService.getAllCurvePoint());
-            return "redirect:/user/list";
+            return "/curvePoint/list";
         }
         return "curvePoint/add";
     }
@@ -66,7 +67,7 @@ public class CurveController {
         }
         model.addAttribute("response", curvePointService.updateCurvePoint(curvePoint, id));
         model.addAttribute("curvePoints", curvePointService.getAllCurvePoint());
-        return "redirect:/curvePoint/list";
+        return "/curvePoint/list";
     }
 
     @GetMapping("/curvePoint/delete/{id}")
@@ -74,6 +75,6 @@ public class CurveController {
         logger.info("--- Method deleteBid ---");
         model.addAttribute("response", curvePointService.deleteCurvePointById(id));
         model.addAttribute("curvePoints", curvePointService.getAllCurvePoint());
-        return "redirect:/curvePoint/list";
+        return "/curvePoint/list";
     }
 }

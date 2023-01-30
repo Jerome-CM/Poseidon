@@ -1,6 +1,8 @@
 package com.nnk.springboot.controllers;
 
+import com.nnk.springboot.domain.User;
 import com.nnk.springboot.repositories.UserRepository;
+import io.swagger.models.Model;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +23,11 @@ public class LoginController {
         this.userRepository = userRepository;
     }
 
-    @GetMapping("login")
-    public ModelAndView login() {
+    @GetMapping("/login")
+    public ModelAndView login(User user, Model model) {
         logger.info("--- Method login ---");
         ModelAndView mav = new ModelAndView();
+        mav.addObject("user", user);
         mav.setViewName("login");
         return mav;
     }
@@ -38,7 +41,7 @@ public class LoginController {
         return mav;
     }
 
-    @GetMapping("error")
+    @GetMapping("/error")
     public ModelAndView error() {
         logger.info("--- Method error ---");
         ModelAndView mav = new ModelAndView();

@@ -67,7 +67,7 @@ public class RatingController {
 
         model.addAttribute("response", ratingService.updateRating(rating, id));
         model.addAttribute("ratings", ratingService.getAllRating());
-        return "redirect:/rating/list";
+        return "/rating/list";
     }
 
     @GetMapping("/rating/delete/{id}")
@@ -75,6 +75,6 @@ public class RatingController {
         logger.info("--- Method deleteRating ---");
         model.addAttribute("response", ratingService.deleteRatingById(id));
         model.addAttribute("ratings", ratingService.getAllRating());
-        return "redirect:/rating/list";
+        return "/rating/list";
     }
 }
