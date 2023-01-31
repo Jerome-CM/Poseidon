@@ -72,6 +72,7 @@ public class UserController {
                              BindingResult result, Model model) {
         logger.info("--- Method updateUser ---");
         model.addAttribute("response", userService.updateUser(user, id));
+        logger.info("--- All user {} ---", userService.getAllUsers());
         model.addAttribute("users", userService.getAllUsers());
         return "/user/list";
     }

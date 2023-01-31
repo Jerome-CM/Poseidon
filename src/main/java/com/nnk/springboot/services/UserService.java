@@ -4,12 +4,13 @@ import com.nnk.springboot.domain.User;
 import com.nnk.springboot.dto.UserDTO;
 import com.nnk.springboot.dto.response.ResponseDTO;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 
 public interface UserService {
 
-    public UserDetails loadUserByUsername(String username);
+    //public UserDetails loadUserByUsername(String username);
 
     public ResponseDTO saveUser(User user);
 

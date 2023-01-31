@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserServiceImpl implements UserDetailsService, UserService {
+public class UserServiceImpl implements UserService {
     private static final Logger logger = LogManager.getLogger(UserServiceImpl.class);
 
     private final UserRepository userRepository;
@@ -35,12 +35,12 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         this.passwordEncoder = passwordEncoder;
         this.modelMapper = modelMapper;
     }
-
+/*
     /**
      * @param username :
      * @return User Spring
      * @throws UsernameNotFoundException
-     */
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
@@ -48,11 +48,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         if (user == null) {
             throw new UsernameNotFoundException(username);
         }
-        /* load username, password and Authorities in a User Spring */
+        /* load username, password and Authorities in a User Spring
         UserDetails userAuth = org.springframework.security.core.userdetails.User.withUsername(user.getUsername()).password(user.getPassword()).authorities(user.getRole().toString()).build();
         logger.info("Connexion User : {}", userAuth);
         return userAuth;
-    }
+    } */
 
     // TODO Documentation for 3 methods
     @Override
@@ -101,8 +101,13 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                 String fullname = user.getFullname();
                 String role = user.getRole();
 
+                User userToUpdate = userWithIdJoin.get();
+                userToUpdate.setFullname(fullname);
+                userToUpdate.setRole(role);
+                userToUpdate.setUsername(username);
+
                 try{
-                    userRepository.saveWithoutPassword(username, fullname, role, id);
+                    userRepository.save(userToUpdate);
                     logger.info("User updated : {}", user);
                     return new ResponseDTO(true, "User updated with success");
                 } catch (Exception e){
