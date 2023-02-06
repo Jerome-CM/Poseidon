@@ -1,6 +1,7 @@
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.User;
+import com.nnk.springboot.dto.response.ResponseDTO;
 import com.nnk.springboot.repositories.UserRepository;
 import io.swagger.models.Model;
 import org.apache.logging.log4j.LogManager;
@@ -49,6 +50,15 @@ public class LoginController {
         mav.addObject("errorMsg", errorMessage);
         mav.setViewName("403");
         logger.error("403 Forbidden");
+        return mav;
+    }
+
+    @GetMapping("/logout")
+    public ModelAndView logout() {
+        logger.info("--- Method logout ---");
+        ModelAndView mav = new ModelAndView();
+        mav.addObject("response", new ResponseDTO(true, "You have been logout."));
+        mav.setViewName("home");
         return mav;
     }
 }
