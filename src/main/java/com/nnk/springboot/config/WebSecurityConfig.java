@@ -32,12 +32,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private JwtRequestFilter jwtRequestFilter;
 
     @Autowired
+    private CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
+
+    @Autowired
+    private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
+
+    /*@Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         // configure AuthenticationManager so that it knows from where to load
         // user for matching credentials
         // Use BCryptPasswordEncoder
-        // auth.userDetailsService(userService).passwordEncoder(passwordEncoder());
-    }
+         auth.userDetailsService(userService).passwordEncoder(passwordEncoder());
+    }*/
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -53,6 +59,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         // We don't need CSRF for this example
+
         httpSecurity.csrf().disable()
                 .authorizeRequests()
                 // restricted url
@@ -66,12 +73,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 //.anyRequest().authenticated()
                 .and()
                 .formLogin().loginPage("/app/login")
+                .failureHandler(customAuthenticationFailureHandler)
+                .successHandler(customAuthenticationSuccessHandler)
                 .and()
+
                 // Show 403.html if access is denied, /error is a get controller
                 .exceptionHandling().accessDeniedPage("/app/error")
                 .and()
                 .logout()
-                .logoutSuccessUrl("/app/login")
+                .logoutSuccessUrl("/")
                 .and()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .and()

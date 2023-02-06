@@ -1,7 +1,12 @@
 package com.nnk.springboot.config;
 
+import com.nnk.springboot.dto.response.ResponseDTO;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletException;
@@ -10,11 +15,15 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
-public class CustomAuthenticationFailureHandler implements AuthenticationFailureHandler {
+
+public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
+
+    private static final Logger logger = LogManager.getLogger(CustomAuthenticationSuccessHandler.class);
+
 
     @Override
-    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-        request.getSession().setAttribute("error", "Identifiant ou mot de passe incorrect");
-        response.sendRedirect("/app/login?error=true");
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+        logger.info("--- Method onAuthenticationSuccess ---");
+        response.sendRedirect("/");
     }
 }
