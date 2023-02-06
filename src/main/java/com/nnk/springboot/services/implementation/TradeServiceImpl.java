@@ -50,7 +50,7 @@ public class TradeServiceImpl implements TradeService {
             if (trade.getTradeId() != null) {
                 tradeHandle = tradeRepository.save(trade);
                 logger.info("Trade updated : {}", tradeHandle);
-                return new ResponseDTO(true, "Trade saved with success");
+                return new ResponseDTO(true, "Trade updated with success");
             } else {
                 logger.error("Trade id is null with this id : {}", trade);
                 return new ResponseDTO(false, "Trade id is null with this id " + id);
