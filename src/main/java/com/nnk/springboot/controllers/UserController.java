@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
+import java.security.Principal;
 
 @Controller
 public class UserController {
@@ -25,19 +26,17 @@ public class UserController {
 
     private final UserService userService;
 
-    // private final PatternInput patternInput;
-
     public UserController(UserRepository userRepository, UserService userService) { //PatternInput patternInput
         this.userRepository = userRepository;
         this.userService = userService;
-        //this.patternInput = patternInput;
     }
 
     @RequestMapping("/user/list")
-    public String home(Model model)
+    public String home(Model model, Principal principal)
     {
         logger.info("--- Method home ---");
         model.addAttribute("users", userService.getAllUsers());
+        model.addAttribute("principal", principal.getName());
         return "user/list";
     }
 
