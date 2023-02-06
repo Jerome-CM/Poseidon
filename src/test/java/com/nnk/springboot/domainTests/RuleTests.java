@@ -1,4 +1,4 @@
-package com.nnk.springboot;
+package com.nnk.springboot.domainTests;
 
 import com.nnk.springboot.domain.RuleName;
 import com.nnk.springboot.dto.RuleNameDTO;

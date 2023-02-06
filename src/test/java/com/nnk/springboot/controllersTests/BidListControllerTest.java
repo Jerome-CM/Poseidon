@@ -1,47 +1,45 @@
 package com.nnk.springboot.controllersTests;
 
 import com.nnk.springboot.controllers.BidListController;
-import com.nnk.springboot.domain.BidList;
-import com.nnk.springboot.services.BidListService;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Profile;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import static org.modelmapper.internal.bytebuddy.matcher.ElementMatchers.is;
+import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
+import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+@Profile("test")
 @WebMvcTest(controllers = BidListController.class)
+@Sql(value = "/dataInjected.sql",executionPhase = BEFORE_TEST_METHOD)
+//@Sql(value = "/truncate.sql",executionPhase = AFTER_TEST_METHOD)
+//@ComponentScan("com.nnk.springboot.jwtConfig")
 public class BidListControllerTest {
 
-    private final BidListController bidListController;
+    @Autowired
+    private MockMvc mockMvc;
 
-    private final BidListService bidListService;
-
-    private final MockMvc mockMvc;
-
-
-    public BidListControllerTest(BidListController bidListController, BidListService bidListService, MockMvc mockMvc) {
-        this.bidListController = bidListController;
-        this.bidListService = bidListService;
-        this.mockMvc = mockMvc;
-    }
 
     @Test
     public void getBidListPage() throws Exception {
-        BidList bid1 = new BidList("Account Test", "Type Test", 10d);
-        BidList bid2 = new BidList("Test Account", "Test Type", 20d);
 
-        bidListService.saveBidList(bid1);
-        bidListService.saveBidList(bid2);
-
-        mockMvc.perform(get("/bidList/list"))
+      mockMvc.perform(get("/bidList/list"))
                 .andExpect(status().isOk())
-                .andExpect((ResultMatcher) jsonPath("$.length()", is(2)))
-                .andExpect((ResultMatcher) jsonPath("$.[0].account", is("Test Account")));
+                .andExpect((ResultMatcher) jsonPath("$.length()", is(4)))
+                .andExpect((ResultMatcher) jsonPath("$.[0].account", is("Account1")));
     }
+
+   /* @Test
+    public void updateBidList(@PathVariable("id") Integer id){
+        mockMvc.perform(get("/bidList/update/{id}"))
+
+    }*/
 }

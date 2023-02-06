@@ -1,4 +1,4 @@
-package com.nnk.springboot;
+package com.nnk.springboot.domainTests;
 
 import com.nnk.springboot.domain.Trade;
 import com.nnk.springboot.dto.TradeDTO;
