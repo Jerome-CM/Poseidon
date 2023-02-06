@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -28,13 +27,9 @@ public class BidList {
     private String account;
     @NotBlank(message = "Type is mandatory")
     private String type;
-    //@Pattern(regexp = "^[0-9]{1,}[.][0-9]{2}$")
     private Double bidQuantity = 0.00;
-    //@Pattern(regexp = "^[0-9]{1,}[.][0-9]{2}$")
     private Double askQuantity = 0.00;
-    //@Pattern(regexp = "^[0-9]{1,}[.][0-9]{2}$")
     private Double bid = 0.00;
-    //@Pattern(regexp = "^[0-9]{1,}[.][0-9]{2}$")
     private Double ask = 0.00;
     private String benchmark = "benchmark";
     @Column(columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
