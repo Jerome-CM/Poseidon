@@ -31,7 +31,7 @@ public class UserDetailServiceJwt implements UserDetailsService {
             throw new UsernameNotFoundException(username);
         }
         /* load username, password and Authorities in a User Spring */
-        UserDetails userAuth = org.springframework.security.core.userdetails.User.withUsername(user.getUsername()).password(user.getPassword()).authorities(user.getRole().toString()).build();
+        UserDetails userAuth = org.springframework.security.core.userdetails.User.withUsername(user.getUsername()).password(user.getPassword()).authorities(user.getRole()).build();
         logger.info("Connexion User : {}", userAuth);
         return userAuth;
     }

@@ -35,30 +35,15 @@ public class UserServiceImpl implements UserService {
         this.passwordEncoder = passwordEncoder;
         this.modelMapper = modelMapper;
     }
-/*
+
     /**
-     * @param username :
-     * @return User Spring
-     * @throws UsernameNotFoundException
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
-        User user = userRepository.findByUsername(username);
-        if (user == null) {
-            throw new UsernameNotFoundException(username);
-        }
-        /* load username, password and Authorities in a User Spring
-        UserDetails userAuth = org.springframework.security.core.userdetails.User.withUsername(user.getUsername()).password(user.getPassword()).authorities(user.getRole().toString()).build();
-        logger.info("Connexion User : {}", userAuth);
-        return userAuth;
-    } */
-
-    // TODO Documentation for 3 methods
+     * Save a new user
+     * @param user
+     * @return ResponseDTO
+     */
     @Override
     public ResponseDTO saveUser(User user){
         logger.info("--- Method saveUser ---");
-        //BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         // the username is available ?
@@ -78,6 +63,12 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    /**
+     * Update a user with are id
+     * @param user
+     * @param id
+     * @return ResponseDTO
+     */
     @Override
     public ResponseDTO updateUser(User user, int id){
 
@@ -106,6 +97,7 @@ public class UserServiceImpl implements UserService {
                 userToUpdate.setRole(role);
                 userToUpdate.setUsername(username);
 
+                // Try update a user without password
                 try{
                     userRepository.save(userToUpdate);
                     logger.info("User updated : {}", user);
@@ -117,6 +109,7 @@ public class UserServiceImpl implements UserService {
 
             } else {
 
+                // Try update a user with a password
                 try {
                     user.setId(id);
                     user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -133,6 +126,11 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    /**
+     * Delete a user with are id
+     * @param id
+     * @return ResponseDTO
+     */
     @Override
     public ResponseDTO deleteUserById(int id) {
         logger.info("--- Method deleteUserById ---");
@@ -165,7 +163,6 @@ public class UserServiceImpl implements UserService {
         }
 
         return userDTOList;
-
     }
 
     /**
@@ -200,8 +197,5 @@ public class UserServiceImpl implements UserService {
         boolean usernameIsAvailable = userFinded.isPresent() ? false : true;
         return usernameIsAvailable;
     }
-
-
-
 
 }
