@@ -10,8 +10,6 @@ import java.util.List;
 
 public interface UserService {
 
-    //public UserDetails loadUserByUsername(String username);
-
     public ResponseDTO saveUser(User user);
 
     public ResponseDTO updateUser(User user, int id);
