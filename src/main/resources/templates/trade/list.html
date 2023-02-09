@@ -3,7 +3,7 @@
 	  xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="utf-8"/>
-<title>Home</title>
+<title>Trade List</title>
  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 </head>
 <body>
@@ -43,7 +43,7 @@
 					<td th:text="${trade.account}"></td>
 					<td th:text="${trade.type}"></td>
 					<td style="width: 25%" th:text="${trade.buyQuantity}"></td>
-					<td style="width: 15%" class="text-center">
+					<td th:if="${session.role == 'ADMIN'}" style="width: 15%" class="text-center">
 						<a th:href="@{/trade/update/{id}(id=${trade.tradeId})}">Edit</a>&nbsp;|
 						<a th:href="@{/trade/delete/{id}(id=${trade.tradeId})}">Delete</a>
 					</td>
