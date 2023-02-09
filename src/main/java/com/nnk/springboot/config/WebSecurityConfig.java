@@ -6,6 +6,7 @@ import com.nnk.springboot.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -27,15 +28,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-
     @Autowired
     private JwtRequestFilter jwtRequestFilter;
-
     @Autowired
     private CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
-
     @Autowired
     private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
+
+
 
     /*@Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
@@ -58,30 +58,27 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-        // We don't need CSRF for this example
-
-        httpSecurity.csrf().disable()
+       httpSecurity.csrf().disable()
                 .authorizeRequests()
                 // restricted url
-                //.antMatchers("/admin/**").hasAuthority("ADMIN")
-                //.antMatchers("/user/**").hasAuthority("ADMIN")
+                .antMatchers("/admin/**").hasAuthority("ADMIN")
+                .antMatchers("/user/**").hasAuthority("ADMIN")
                 // public url
                 .antMatchers("/authenticate").permitAll()
                 .antMatchers("/app/login").permitAll()
                 .antMatchers("/").permitAll()
                 .antMatchers("/app/error").permitAll()
-                //.anyRequest().authenticated()
+                .anyRequest().authenticated()
                 .and()
                 .formLogin().loginPage("/app/login")
                 .failureHandler(customAuthenticationFailureHandler)
                 .successHandler(customAuthenticationSuccessHandler)
                 .and()
-
                 // Show 403.html if access is denied, /error is a get controller
                 .exceptionHandling().accessDeniedPage("/app/error")
                 .and()
                 .logout()
-                .logoutSuccessUrl("/")
+                // .logoutSuccessUrl("/")
                 .and()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .and()
