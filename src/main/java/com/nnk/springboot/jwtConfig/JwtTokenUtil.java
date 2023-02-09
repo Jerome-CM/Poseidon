@@ -1,21 +1,27 @@
 package com.nnk.springboot.jwtConfig;
 
+import com.nnk.springboot.services.implementation.UserDetailServiceJwt;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 
 @Component
+@Slf4j
 public class JwtTokenUtil implements Serializable {
+
+    @Autowired
+    private UserDetailServiceJwt userDetailsService;
+
 
     private static final long serialVersionUID = -2550185165626007488L;
 
@@ -74,4 +80,13 @@ public class JwtTokenUtil implements Serializable {
         final String username = getUsernameFromToken(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
+
+    public String createAuthenticationToken(String username) throws Exception {
+        log.info("--- Method createAuthenticationToken JWTUtil ---");
+
+        final UserDetails userDetails = userDetailsService
+                .loadUserByUsername(username);
+        return "Bearer " + generateToken(userDetails);
+    }
+
 }
