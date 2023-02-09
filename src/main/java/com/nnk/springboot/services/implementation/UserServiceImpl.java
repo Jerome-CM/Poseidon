@@ -9,10 +9,6 @@ import com.nnk.springboot.services.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -196,6 +192,10 @@ public class UserServiceImpl implements UserService {
         Optional<User> userFinded = Optional.ofNullable(userRepository.findByUsername(username));
         boolean usernameIsAvailable = userFinded.isPresent() ? false : true;
         return usernameIsAvailable;
+    }
+
+    public User getUserByUsername(String username){
+        return userRepository.findByUsername(username);
     }
 
 }

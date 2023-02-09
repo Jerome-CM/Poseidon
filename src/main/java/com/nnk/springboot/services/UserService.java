@@ -22,4 +22,6 @@ public interface UserService {
 
     public boolean isTheUsernameAvailable(String username);
 
+    public User getUserByUsername(String username);
+
 }
