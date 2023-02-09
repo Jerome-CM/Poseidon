@@ -19,7 +19,6 @@ public class TradeController {
 
     private static final Logger logger = LogManager.getLogger(TradeController.class);
     public final TradeService tradeService;
-
     public TradeController(TradeService tradeService) {
         this.tradeService = tradeService;
     }

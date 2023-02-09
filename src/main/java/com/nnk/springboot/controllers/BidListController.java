@@ -47,7 +47,7 @@ public class BidListController {
         if (!result.hasErrors()) {
             model.addAttribute("response", bidListService.saveBidList(bid));
             model.addAttribute("bidLists", bidListService.getAllBidList());
-            return "/user/list";
+            return "/bidList/list";
         }
         return "bidList/add";
     }

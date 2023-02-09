@@ -6,11 +6,14 @@ import com.nnk.springboot.repositories.UserRepository;
 import io.swagger.models.Model;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("app")
@@ -53,12 +56,22 @@ public class LoginController {
         return mav;
     }
 
+    @PostMapping("/logout")
+    public ModelAndView postLogout(HttpServletRequest request) {
+        logger.info("--- Method POST logout ---");
+        ModelAndView mav = new ModelAndView();
+        HttpSession session = request.getSession();
+        session.invalidate();
+        mav.setViewName("logout");
+        return mav;
+    }
+
     @GetMapping("/logout")
-    public ModelAndView logout() {
-        logger.info("--- Method logout ---");
+    public ModelAndView getLogout() {
+        logger.info("--- Method GET logout ---");
         ModelAndView mav = new ModelAndView();
         mav.addObject("response", new ResponseDTO(true, "You have been logout."));
-        mav.setViewName("home");
+        mav.setViewName("logout");
         return mav;
     }
 }

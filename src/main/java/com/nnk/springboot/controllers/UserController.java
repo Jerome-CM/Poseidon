@@ -32,11 +32,10 @@ public class UserController {
     }
 
     @RequestMapping("/user/list")
-    public String home(Model model, Principal principal)
+    public String home(Model model)
     {
         logger.info("--- Method home ---");
         model.addAttribute("users", userService.getAllUsers());
-        model.addAttribute("principal", principal.getName());
         return "user/list";
     }
 
