@@ -25,7 +25,7 @@ public class UsersTests {
         User user = new User();
         user.setUsername("admin");
         user.setFullname("Pierre");
-        user.setPassword("Admin_Poseiden");
+        user.setPassword("AdminPoseiden41#");
         user.setRole("ADMIN");
     
         // Save
