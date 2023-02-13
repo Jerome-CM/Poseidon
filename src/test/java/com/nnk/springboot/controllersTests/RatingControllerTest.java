@@ -1,30 +1,20 @@
 package com.nnk.springboot.controllersTests;
 
-import com.nnk.springboot.controllers.BidListController;
+import com.nnk.springboot.controllers.RatingController;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Profile;
-import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultMatcher;
-import org.springframework.web.bind.annotation.PathVariable;
-
 import static com.nnk.springboot.CustomSecurityMockMvcRequestPostProcessors.adminValue;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.internal.bytebuddy.implementation.FixedValue.value;
-import static org.modelmapper.internal.bytebuddy.matcher.ElementMatchers.is;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
-import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.*;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
+import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
+import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -35,47 +25,47 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @ContextConfiguration
-public class BidListControllerTest {
+public class RatingControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
-    private BidListController bidListController;
+    private RatingController ratingController;
 
     @Test
     void contextLoads()throws Exception {
-        assertThat(bidListController).isNotNull();
+        assertThat(ratingController).isNotNull();
     }
 
     @Test
-    public void getBidListPageWithoutLoginTest() throws Exception {
+    public void getRatingPageWithoutLoginTest() throws Exception {
 
-        mockMvc.perform(get("/bidList/list"))
+        mockMvc.perform(get("/rating/list"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    public void getBidListPageWithLoginTest() throws Exception {
-        mockMvc.perform(get("/bidList/list").with(adminValue()))
+    public void getRatingPageWithLoginTest() throws Exception {
+        mockMvc.perform(get("/rating/list").with(adminValue()))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void addBidListTest() throws Exception {
-        mockMvc.perform(get("/bidList/add").with(adminValue()))
+    public void addRatingTest() throws Exception {
+        mockMvc.perform(get("/rating/add").with(adminValue()))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void updateBidListTest() throws Exception {
-        mockMvc.perform(get("/bidList/update/1").with(adminValue()))
+    public void updateRatingTest() throws Exception {
+        mockMvc.perform(get("/rating/update/1").with(adminValue()))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void deleteBidListTest() throws Exception {
-        mockMvc.perform(get("/bidList/delete/1").with(adminValue()))
+    public void deleteRatingTest() throws Exception {
+        mockMvc.perform(get("/rating/delete/1").with(adminValue()))
                 .andExpect(status().isOk());
     }
 
