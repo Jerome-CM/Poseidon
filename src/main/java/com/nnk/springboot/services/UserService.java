@@ -24,4 +24,6 @@ public interface UserService {
 
     public User getUserByUsername(String username);
 
+    public boolean verifyPasswordPattern(String password);
+
 }

@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService  {
     private static final Logger logger = LogManager.getLogger(UserServiceImpl.class);
 
     private final UserRepository userRepository;
@@ -25,6 +25,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     private final ModelMapper modelMapper;
+
 
     public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, ModelMapper modelMapper) {
         this.userRepository = userRepository;
@@ -40,23 +41,30 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseDTO saveUser(User user){
         logger.info("--- Method saveUser ---");
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        // the username is available ?
-        if(!isTheUsernameAvailable(user.getUsername())){
-            logger.error("The username isn't available : {}", user.getUsername());
-            return new ResponseDTO(false, "This username isn't available");
+        if(verifyPasswordPattern(user.getPassword())){
+
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+            // the username is available ?
+            if(!isTheUsernameAvailable(user.getUsername())){
+                logger.error("The username isn't available : {}", user.getUsername());
+                return new ResponseDTO(false, "This username isn't available");
+            }
+
+            try{
+                userRepository.save(user);
+                logger.info("User saved : {}", user);
+                return new ResponseDTO(true, "User saved with success");
+            } catch (Exception e){
+                logger.error("Impossible to save a user : {}", e.getMessage());
+                return new ResponseDTO(false, "Impossible to save the user : " + e.getMessage());
+            }
+
+        } else {
+            logger.error("At least one capital letter, 8 characters minimum, at least one number and one symbol (@$!%#?&)");
+            return new ResponseDTO(false, "The password pattern isn't exactly");
         }
-
-        try{
-            userRepository.save(user);
-            logger.info("User saved : {}", user);
-            return new ResponseDTO(true, "User saved with success");
-        } catch (Exception e){
-            logger.error("Impossible to save a user : {}", e.getMessage());
-            return new ResponseDTO(false, "Impossible to save the user : " + e.getMessage());
-        }
-
     }
 
     /**
@@ -66,24 +74,24 @@ public class UserServiceImpl implements UserService {
      * @return ResponseDTO
      */
     @Override
-    public ResponseDTO updateUser(User user, int id){
+    public ResponseDTO updateUser(User user, int id) {
 
         logger.info("--- Method updateUser ---");
         Optional<User> userWithIdJoin = userRepository.findById(id);
         int userJoinGetId = userWithIdJoin.get().getId();
 
-        if(userJoinGetId == user.getId()){
+        if (userJoinGetId == user.getId()) {
 
             // the username is available ?
-            if(!userWithIdJoin.get().getUsername().equals(user.getUsername())){
-                if(!isTheUsernameAvailable(user.getUsername())){
+            if (!userWithIdJoin.get().getUsername().equals(user.getUsername())) {
+                if (!isTheUsernameAvailable(user.getUsername())) {
                     logger.error("The username isn't available : {}", user.getUsername());
                     return new ResponseDTO(false, "This username isn't available");
                 }
             }
 
             // The password has he changed ?
-            if(user.getPassword().isEmpty()){
+            if (user.getPassword().isEmpty()) {
                 String username = user.getUsername();
                 String fullname = user.getFullname();
                 String role = user.getRole();
@@ -94,27 +102,31 @@ public class UserServiceImpl implements UserService {
                 userToUpdate.setUsername(username);
 
                 // Try update a user without password
-                try{
+                try {
                     userRepository.save(userToUpdate);
                     logger.info("User updated : {}", user);
                     return new ResponseDTO(true, "User updated with success");
-                } catch (Exception e){
+                } catch (Exception e) {
                     logger.error("Impossible to updated the user : {}", e.getMessage());
                     return new ResponseDTO(false, "Impossible to update the user : " + e.getMessage());
                 }
 
             } else {
-
-                // Try update a user with a password
-                try {
-                    user.setId(id);
-                    user.setPassword(passwordEncoder.encode(user.getPassword()));
-                    User userUpdate = userRepository.save(user);
-                    logger.info("User updated : {}", userUpdate);
-                    return new ResponseDTO(true, "User updated with success");
-                } catch (Exception e) {
-                    logger.error("Impossible to updated the user : {}", e.getMessage());
-                    return new ResponseDTO(false, "Impossible to update the user : " + e.getMessage());
+                if (verifyPasswordPattern(user.getPassword())) {
+                    // Try update a user with a password
+                    try {
+                        user.setId(id);
+                        user.setPassword(passwordEncoder.encode(user.getPassword()));
+                        User userUpdate = userRepository.save(user);
+                        logger.info("User updated : {}", userUpdate);
+                        return new ResponseDTO(true, "User updated with success");
+                    } catch (Exception e) {
+                        logger.error("Impossible to updated the user : {}", e.getMessage());
+                        return new ResponseDTO(false, "Impossible to update the user : " + e.getMessage());
+                    }
+                } else {
+                    logger.error("At least one capital letter, 8 characters minimum, at least one number and one symbol (@$!%#?&)");
+                    return new ResponseDTO(false, "The password pattern isn't exactly");
                 }
             }
         } else {
@@ -188,14 +200,84 @@ public class UserServiceImpl implements UserService {
      * @param username
      * @return boolean
      */
+    @Override
     public boolean isTheUsernameAvailable(String username) {
         Optional<User> userFinded = Optional.ofNullable(userRepository.findByUsername(username));
         boolean usernameIsAvailable = userFinded.isPresent() ? false : true;
         return usernameIsAvailable;
     }
 
+    @Override
     public User getUserByUsername(String username){
         return userRepository.findByUsername(username);
+    }
+
+    @Override
+    public boolean verifyPasswordPattern(String password) {
+
+        int minCharactersInPassword = 8;
+
+        String[] charInUpperCase = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
+        String[] charSymbols = {"@", "$", "!", "%", "#", "?", "&"};
+        String[] charNumbers = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
+
+        String[] splitPassword = password.split("");
+
+        boolean lenghtPassword = false;
+        boolean OneCharInUpperCase = false;
+        boolean OneNumber = false;
+        boolean OneSymbols = false;
+
+        if(password.length() >= 8){
+            lenghtPassword = true;
+            for(int i = 0; i < password.length(); i++){
+                logger.info("--- Char to test : {} ---", splitPassword[i]);
+                if(!OneCharInUpperCase){
+                    logger.info("state of OneCharInUpperCase : {}", OneCharInUpperCase);
+                    for(int x = 0; x < 26; x++){
+                        logger.info("--- Method loop of uppercase : if :{} ", splitPassword[i].equals(charInUpperCase[x]));
+                        if(splitPassword[i].equals(charInUpperCase[x])){
+                            OneCharInUpperCase = true;
+                            break;
+                        }
+                    }
+                }
+
+                if(!OneSymbols){
+                    logger.info("State of OneSymbols : {}", OneSymbols);
+                    for(int y = 0; y < charSymbols.length; y++){
+                        logger.info("--- Method loop of symbols : if :{} ", splitPassword[i].equals(charSymbols[y]));
+                        if(splitPassword[i].equals(charSymbols[y])){
+                            OneSymbols = true;
+                            break;
+                        }
+                    }
+                }
+
+                if(!OneNumber){
+                    logger.info("State of OneNumber : {}", OneNumber);
+                    for(int z = 0; z < charNumbers.length; z++){
+                        logger.info("--- Method loop of numbers : if :{} ", splitPassword[i].equals(charNumbers[z]));
+                        if(splitPassword[i].equals(charNumbers[z])){
+                            OneNumber = true;
+                            break;
+                        }
+                    }
+                }
+
+            }
+        } else {
+            return false;
+        }
+
+
+        logger.info("--- Fin des boucles : lenghtPassword : {}; OneCharInUpperCase : {}; OneSymbols : {} ---", lenghtPassword, OneCharInUpperCase,OneSymbols);
+
+        if(lenghtPassword && OneCharInUpperCase && OneSymbols){
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }
