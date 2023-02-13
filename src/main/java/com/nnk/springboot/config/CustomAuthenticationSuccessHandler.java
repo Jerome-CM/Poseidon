@@ -43,8 +43,8 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
             String token = null;
             try {
                 token = jwtTest.createAuthenticationToken(username);
-
             } catch (Exception e) {
+                logger.info("Impossible to create a token : {}", e.getMessage());
                 throw new RuntimeException(e);
             }
             session.setAttribute("token", token);
