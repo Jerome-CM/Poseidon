@@ -1,6 +1,7 @@
 package com.nnk.springboot.services.implementation;
 
 
+import com.nnk.springboot.Utility.PasswordValidate;
 import com.nnk.springboot.dto.UserDTO;
 import com.nnk.springboot.dto.response.ResponseDTO;
 import com.nnk.springboot.repositories.UserRepository;
@@ -27,6 +28,7 @@ public class UserServiceImpl implements UserService  {
     private final ModelMapper modelMapper;
 
 
+
     public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, ModelMapper modelMapper) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -42,7 +44,7 @@ public class UserServiceImpl implements UserService  {
     public ResponseDTO saveUser(User user){
         logger.info("--- Method saveUser ---");
 
-        if(verifyPasswordPattern(user.getPassword())){
+        if(PasswordValidate.isValid(user.getPassword())){
 
             user.setPassword(passwordEncoder.encode(user.getPassword()));
 
@@ -105,14 +107,14 @@ public class UserServiceImpl implements UserService  {
                 try {
                     userRepository.save(userToUpdate);
                     logger.info("User updated : {}", user);
-                    return new ResponseDTO(true, "User updated with success");
+                    return new ResponseDTO(true, "User updated with success ( with password )");
                 } catch (Exception e) {
                     logger.error("Impossible to updated the user : {}", e.getMessage());
                     return new ResponseDTO(false, "Impossible to update the user : " + e.getMessage());
                 }
 
             } else {
-                if (verifyPasswordPattern(user.getPassword())) {
+                if(PasswordValidate.isValid(user.getPassword())){
                     // Try update a user with a password
                     try {
                         user.setId(id);
@@ -142,14 +144,22 @@ public class UserServiceImpl implements UserService  {
     @Override
     public ResponseDTO deleteUserById(int id) {
         logger.info("--- Method deleteUserById ---");
-        try{
-            User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id :" + id));
-            userRepository.delete(user);
-            logger.info("User deleted");
-            return new ResponseDTO(true, "User deleted with success");
-        } catch (Exception e){
-            logger.error("Impossible to delete the user with this id({}) : {}",id, e.getMessage());
-            return new ResponseDTO(false, "Impossible to delete the user : " + e.getMessage());
+        System.out.println("------ id :" + id);
+        Optional<User> user = userRepository.findById(id);
+        System.out.println("-------- user : " + user);
+        if(user.isPresent()) {
+            User userConfirm = user.get();
+            try {
+                userRepository.delete(userConfirm);
+                logger.info("User deleted");
+                return new ResponseDTO(true, "User deleted with success");
+            } catch (Exception e) {
+                logger.error("Impossible to delete the user with this id({}) : {}", id, e.getMessage());
+                return new ResponseDTO(false, "Impossible to delete the user : " + e.getMessage());
+            }
+        } else {
+            logger.error("Impossible to find the user with this id({})", id);
+            return new ResponseDTO(false, "Impossible to find the user");
         }
     }
 
@@ -183,7 +193,7 @@ public class UserServiceImpl implements UserService  {
         logger.info("--- Method getUsersById ---");
 
         if(id != 0) {
-            Optional<User> userById = Optional.ofNullable(userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id)));
+            Optional<User> userById = userRepository.findById(id);
             if (userById.isPresent()) {
                 return modelMapper.map(userById.get(),UserDTO.class);
             } else {
@@ -210,74 +220,6 @@ public class UserServiceImpl implements UserService  {
     @Override
     public User getUserByUsername(String username){
         return userRepository.findByUsername(username);
-    }
-
-    @Override
-    public boolean verifyPasswordPattern(String password) {
-
-        int minCharactersInPassword = 8;
-
-        String[] charInUpperCase = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
-        String[] charSymbols = {"@", "$", "!", "%", "#", "?", "&"};
-        String[] charNumbers = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
-
-        String[] splitPassword = password.split("");
-
-        boolean lenghtPassword = false;
-        boolean OneCharInUpperCase = false;
-        boolean OneNumber = false;
-        boolean OneSymbols = false;
-
-        if(password.length() >= 8){
-            lenghtPassword = true;
-            for(int i = 0; i < password.length(); i++){
-                logger.info("--- Char to test : {} ---", splitPassword[i]);
-                if(!OneCharInUpperCase){
-                    logger.info("state of OneCharInUpperCase : {}", OneCharInUpperCase);
-                    for(int x = 0; x < 26; x++){
-                        logger.info("--- Method loop of uppercase : if :{} ", splitPassword[i].equals(charInUpperCase[x]));
-                        if(splitPassword[i].equals(charInUpperCase[x])){
-                            OneCharInUpperCase = true;
-                            break;
-                        }
-                    }
-                }
-
-                if(!OneSymbols){
-                    logger.info("State of OneSymbols : {}", OneSymbols);
-                    for(int y = 0; y < charSymbols.length; y++){
-                        logger.info("--- Method loop of symbols : if :{} ", splitPassword[i].equals(charSymbols[y]));
-                        if(splitPassword[i].equals(charSymbols[y])){
-                            OneSymbols = true;
-                            break;
-                        }
-                    }
-                }
-
-                if(!OneNumber){
-                    logger.info("State of OneNumber : {}", OneNumber);
-                    for(int z = 0; z < charNumbers.length; z++){
-                        logger.info("--- Method loop of numbers : if :{} ", splitPassword[i].equals(charNumbers[z]));
-                        if(splitPassword[i].equals(charNumbers[z])){
-                            OneNumber = true;
-                            break;
-                        }
-                    }
-                }
-
-            }
-        } else {
-            return false;
-        }
-
-
-        logger.info("--- Fin des boucles : lenghtPassword : {}; OneCharInUpperCase : {}; OneSymbols : {} ---", lenghtPassword, OneCharInUpperCase,OneSymbols);
-
-        if(lenghtPassword && OneCharInUpperCase && OneSymbols){
-            return true;
-        } else {
-            return false;
-        }
     }
 
 }

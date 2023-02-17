@@ -37,41 +37,53 @@ public class CurvePointServiceImpl implements CurvePointService {
             return new ResponseDTO(true, "CurvePoint saved with success");
         } catch (Exception e){
             logger.error("Impossible to save a curvePoint : {}", e.getMessage());
-            return new ResponseDTO(false, "Impossible to save a curvePoint : " + e.getMessage());
+            return new ResponseDTO(false, "Impossible to save a curvePoint");
         }
     }
 
     @Override
     public ResponseDTO updateCurvePoint(CurvePoint curvePoint, int id){
         logger.info("--- Method updateCurvePoint ---");
-        try {
-            CurvePoint curvePointHandle = curvePointRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid curvePoint Id:" + id));
-            curvePoint.setId(curvePointHandle.getId());
-            if (curvePoint.getId() != null) {
-                curvePointHandle = curvePointRepository.save(curvePoint);
-                logger.info("CurvePoint updated : {}", curvePointHandle);
-                return new ResponseDTO(true, "CurvePoint updated with success");
-            } else {
-                logger.error("CurvePoint id is null with this id : {}", curvePoint);
-                return new ResponseDTO(false, "CurvePoint id is null with this id : " + id);
+        Optional<CurvePoint> curvePointHandle = curvePointRepository.findById(id);
+        if(curvePointHandle.isPresent()) {
+            CurvePoint curvePointHandleConfirm = curvePointHandle.get();
+            try {
+                curvePoint.setId(curvePointHandleConfirm.getId());
+                if (curvePoint.getId() != null) {
+                    curvePointHandleConfirm = curvePointRepository.save(curvePoint);
+                    logger.info("CurvePoint updated : {}", curvePointHandleConfirm);
+                    return new ResponseDTO(true, "CurvePoint updated with success");
+                } else {
+                    logger.error("CurvePoint id is null with this id : {}", curvePoint);
+                    return new ResponseDTO(false, "CurvePoint id is null with this id : " + id);
+                }
+            } catch (Exception e) {
+                logger.error("Impossible to updated the curvePoint : {}", e.getMessage());
+                return new ResponseDTO(false, "Impossible to save a curvePoint");
             }
-        } catch (Exception e) {
-            logger.error("Impossible to updated the curvePoint : {}", e.getMessage());
-            return new ResponseDTO(false, "Impossible to save a curvePoint : " + e.getMessage());
+        } else {
+            logger.error("Impossible to find the curvePoint");
+            return new ResponseDTO(false, "Impossible to find a curvePoint");
         }
     }
 
     @Override
     public ResponseDTO deleteCurvePointById(int id) {
         logger.info("--- Method deleteCurvePointById ---");
-        try{
-            CurvePoint curvePoint = curvePointRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid curvePoint Id:" + id));
-            curvePointRepository.delete(curvePoint);
-            logger.info("CurvePoint deleted");
-            return new ResponseDTO(true, "CurvePoint deleted with success");
-        } catch (Exception e){
-            logger.error("Impossible to delete the curvePoint with this id({}) : {}",id, e.getMessage());
-            return new ResponseDTO(false, "Impossible to delete a curvePoint : " + e.getMessage());
+        Optional<CurvePoint> curvePoint = curvePointRepository.findById(id);
+        if(curvePoint.isPresent()){
+            CurvePoint curvePointConfirm = curvePoint.get();
+            try{
+                curvePointRepository.delete(curvePointConfirm);
+                logger.info("CurvePoint deleted");
+                return new ResponseDTO(true, "CurvePoint deleted with success");
+            } catch (Exception e){
+                logger.error("Impossible to delete the curvePoint with this id({}) : {}",id, e.getMessage());
+                return new ResponseDTO(false, "Impossible to delete a curvePoint");
+            }
+        } else {
+            logger.error("Impossible to find the curvePoint with this id({})",id);
+            return new ResponseDTO(false, "Impossible to find a curvePoint");
         }
     }
 

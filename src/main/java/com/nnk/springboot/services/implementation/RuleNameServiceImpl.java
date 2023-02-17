@@ -37,41 +37,53 @@ public class RuleNameServiceImpl implements RuleNameService {
             return new ResponseDTO(true, "RuleName saved with success");
         } catch (Exception e){
             logger.error("Impossible to save a ruleName : {}", e.getMessage());
-            return new ResponseDTO(false, "Impossible to save a ruleName : " + e.getMessage());
+            return new ResponseDTO(false, "Impossible to save a ruleName");
         }
     }
 
     @Override
     public ResponseDTO updateRuleName(RuleName ruleName, int id){
         logger.info("--- Method updateRuleName ---");
-        try {
-            RuleName ruleNameHandle = ruleNameRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid ruleName Id:" + id));
-            ruleName.setId(ruleNameHandle.getId());
-            if (ruleName.getId() != null) {
-                ruleNameHandle = ruleNameRepository.save(ruleName);
-                logger.info("RuleName updated : {}", ruleNameHandle);
-                return new ResponseDTO(true, "RuleName updated with success");
-            } else {
-                logger.error("RuleName id is null with this id : {}", ruleName);
-                return new ResponseDTO(false, "RuleName id is null with this id : " + id);
+        Optional<RuleName> ruleNameHandle = ruleNameRepository.findById(id);
+        if(ruleNameHandle.isPresent()) {
+            RuleName ruleNameHandleConfirm = ruleNameHandle.get();
+            try {
+                ruleName.setId(ruleNameHandleConfirm.getId());
+                if (ruleName.getId() != null) {
+                    ruleNameHandleConfirm = ruleNameRepository.save(ruleName);
+                    logger.info("RuleName updated : {}", ruleNameHandleConfirm);
+                    return new ResponseDTO(true, "RuleName updated with success");
+                } else {
+                    logger.error("RuleName id is null with this id : {}", ruleName);
+                    return new ResponseDTO(false, "RuleName id is null with this id : " + id);
+                }
+            } catch (Exception e) {
+                logger.error("Impossible to updated the ruleName : {}", e.getMessage());
+                return new ResponseDTO(false, "Impossible to update this ruleName : " + e.getMessage());
             }
-        } catch (Exception e) {
-            logger.error("Impossible to updated the ruleName : {}", e.getMessage());
-            return new ResponseDTO(false, "Impossible to update this ruleName : " + e.getMessage());
+        } else {
+            logger.error("Impossible to find the ruleName");
+            return new ResponseDTO(false, "Impossible to find this ruleName");
         }
     }
 
     @Override
     public ResponseDTO deleteRuleNameById(int id) {
         logger.info("--- Method deleteRuleNameById ---");
-        try{
-            RuleName ruleName = ruleNameRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid ruleName Id:" + id));
-            ruleNameRepository.delete(ruleName);
-            logger.info("RuleName deleted");
-            return new ResponseDTO(true, "RuleName deleted with success");
-        } catch (Exception e){
-            logger.error("Impossible to delete the ruleName with this id({}) : {}",id, e.getMessage());
-            return new ResponseDTO(false, "Impossible to delete this ruleName : " + e.getMessage());
+        Optional<RuleName> ruleName = ruleNameRepository.findById(id);
+        if(ruleName.isPresent()) {
+            RuleName ruleNameConfirm = ruleName.get();
+            try {
+                ruleNameRepository.delete(ruleNameConfirm);
+                logger.info("RuleName deleted");
+                return new ResponseDTO(true, "RuleName deleted with success");
+            } catch (Exception e) {
+                logger.error("Impossible to delete the ruleName with this id({}) : {}", id, e.getMessage());
+                return new ResponseDTO(false, "Impossible to delete this ruleName : " + e.getMessage());
+            }
+        } else {
+            logger.error("Impossible to find the ruleName with this id({})", id);
+            return new ResponseDTO(false, "Impossible to find this ruleName");
         }
     }
 
@@ -104,7 +116,7 @@ public class RuleNameServiceImpl implements RuleNameService {
     public RuleNameDTO getRuleNameById(int id) {
 
         if(id != 0) {
-            Optional<RuleName> ruleNameById = Optional.ofNullable(ruleNameRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid ruleName Id:" + id)));
+            Optional<RuleName> ruleNameById = ruleNameRepository.findById(id);
             if (ruleNameById.isPresent()) {
                 return modelMapper.map(ruleNameById.get(), RuleNameDTO.class);
             } else {

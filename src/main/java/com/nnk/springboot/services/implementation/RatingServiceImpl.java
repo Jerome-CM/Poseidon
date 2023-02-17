@@ -37,41 +37,54 @@ public class RatingServiceImpl implements RatingService {
             return new ResponseDTO(true, "Rating saved with success");
         } catch (Exception e){
             logger.error("Impossible to save a rating : {}", e.getMessage());
-            return new ResponseDTO(false, "Impossible to save a rating : " + e.getMessage());
+            return new ResponseDTO(false, "Impossible to save a rating");
         }
     }
 
     @Override
     public ResponseDTO updateRating(Rating rating, int id){
         logger.info("--- Method updateRating ---");
-        try {
-            Rating ratingHandle = ratingRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid rating Id:" + id));
-            rating.setId(ratingHandle.getId());
-            if (rating.getId() != null) {
-                ratingHandle = ratingRepository.save(rating);
-                logger.info("Rating updated : {}", ratingHandle);
-                return new ResponseDTO(true, "Rating updated with success");
-            } else {
-                logger.error("Rating id is null with this id : {}", rating);
-                return new ResponseDTO(false, "Rating id is null with this id : " + id);
+        System.out.println("------ Rating reçu dans le service :" + rating);
+        Optional<Rating> ratingHandle = ratingRepository.findById(id);
+        if(ratingHandle.isPresent()) {
+            Rating ratingHandleConfirm = ratingHandle.get();
+            try {
+                rating.setId(ratingHandleConfirm.getId());
+                if (rating.getId() != null) {
+                    ratingHandleConfirm = ratingRepository.save(rating);
+                    logger.info("Rating updated : {}", ratingHandleConfirm);
+                    return new ResponseDTO(true, "Rating updated with success");
+                } else {
+                    logger.error("Rating id is null with this id : {}", ratingHandleConfirm);
+                    return new ResponseDTO(false, "Rating id is null with this id : " + id);
+                }
+            } catch (Exception e) {
+                logger.error("Impossible to updated the rating : {}", e.getMessage());
+                return new ResponseDTO(false, "Impossible to update a rating");
             }
-        } catch (Exception e) {
-            logger.error("Impossible to updated the rating : {}", e.getMessage());
-            return new ResponseDTO(false, "Impossible to update a rating : " + e.getMessage());
+        } else {
+            logger.error("Impossible to find the rating");
+            return new ResponseDTO(false, "Impossible to find a rating");
         }
     }
 
     @Override
     public ResponseDTO deleteRatingById(int id) {
         logger.info("--- Method deleteRatingById ---");
-        try{
-            Rating rating = ratingRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid rating Id:" + id));
-            ratingRepository.delete(rating);
-            logger.info("Rating deleted");
-            return new ResponseDTO(true, "Rating deleted with success");
-        } catch (Exception e){
-            logger.error("Impossible to delete the rating with this id({}) : {}",id, e.getMessage());
-            return new ResponseDTO(false, "Impossible to delete a rating : " + e.getMessage());
+        Optional<Rating> rating = ratingRepository.findById(id);
+        if(rating.isPresent()) {
+            Rating ratingPresent = rating.get();
+            try {
+                ratingRepository.delete(ratingPresent);
+                logger.info("Rating deleted");
+                return new ResponseDTO(true, "Rating deleted with success");
+            } catch (Exception e) {
+                logger.error("Impossible to delete the rating with this id({}) : {}", id, e.getMessage());
+                return new ResponseDTO(false, "Impossible to delete a rating");
+            }
+        } else {
+            logger.error("Impossible to find the rating with this id({})", id);
+            return new ResponseDTO(false, "Impossible to find a rating");
         }
     }
 
@@ -104,7 +117,7 @@ public class RatingServiceImpl implements RatingService {
     public RatingDTO getRatingById(int id) {
 
         if(id != 0) {
-            Optional<Rating> ratingById = Optional.ofNullable(ratingRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid rating Id:" + id)));
+            Optional<Rating> ratingById = ratingRepository.findById(id);
             if (ratingById.isPresent()) {
                 return modelMapper.map(ratingById.get(), RatingDTO.class);
             } else {

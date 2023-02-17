@@ -37,41 +37,53 @@ public class TradeServiceImpl implements TradeService {
             return new ResponseDTO(true, "Trade saved with success");
         } catch (Exception e){
             logger.error("Impossible to save a trade : {}", e.getMessage());
-            return new ResponseDTO(false, "Trade saved with success");
+            return new ResponseDTO(false, "Impossible to save a trade");
         }
     }
 
     @Override
     public ResponseDTO updateTrade(Trade trade, int id){
         logger.info("--- Method updateTrade ---");
-        try {
-            Trade tradeHandle = tradeRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid trade Id:" + id));
-            trade.setTradeId(tradeHandle.getTradeId());
-            if (trade.getTradeId() != null) {
-                tradeHandle = tradeRepository.save(trade);
-                logger.info("Trade updated : {}", tradeHandle);
-                return new ResponseDTO(true, "Trade updated with success");
-            } else {
-                logger.error("Trade id is null with this id : {}", trade);
-                return new ResponseDTO(false, "Trade id is null with this id " + id);
+        Optional<Trade> tradeHandle = tradeRepository.findById(id);
+        if(tradeHandle.isPresent()) {
+            Trade tradeHandleConfirm = tradeHandle.get();
+            try {
+                trade.setTradeId(tradeHandleConfirm.getTradeId());
+                if (trade.getTradeId() != null) {
+                    tradeHandleConfirm = tradeRepository.save(trade);
+                    logger.info("Trade updated : {}", tradeHandleConfirm);
+                    return new ResponseDTO(true, "Trade updated with success");
+                } else {
+                    logger.error("Trade id is null with this id : {}", trade);
+                    return new ResponseDTO(false, "Trade id is null with this id " + id);
+                }
+            } catch (Exception e) {
+                logger.error("Impossible to updated the trade : {}", e.getMessage());
+                return new ResponseDTO(false, "Impossible to updated the trade : " + e.getMessage());
             }
-        } catch (Exception e) {
-            logger.error("Impossible to updated the trade : {}", e.getMessage());
-            return new ResponseDTO(false, "Impossible to updated the trade : " + e.getMessage());
+        } else {
+            logger.error("Impossible to find the trade");
+            return new ResponseDTO(false, "Impossible to find this trade");
         }
     }
 
     @Override
     public ResponseDTO deleteTradeById(int id) {
-        logger.info("--- Method deleteTradebyId ---");
-        try{
-            Trade trade = tradeRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid trade Id:" + id));
-            tradeRepository.delete(trade);
-            logger.info("Trade deleted");
-            return new ResponseDTO(true, "Trade deleted with success");
-        } catch (Exception e){
-            logger.error("Impossible to delete the trade with this id({}) : {}",id, e.getMessage());
-            return new ResponseDTO(false, "Impossible to deleted the trade : " + e.getMessage());
+        logger.info("--- Method deleteTradeById ---");
+        Optional<Trade> trade = tradeRepository.findById(id);
+        if(trade.isPresent()) {
+            Trade tradeConfirm = trade.get();
+            try {
+                tradeRepository.delete(tradeConfirm);
+                logger.info("Trade deleted");
+                return new ResponseDTO(true, "Trade deleted with success");
+            } catch (Exception e) {
+                logger.error("Impossible to delete the trade with this id({}) : {}", id, e.getMessage());
+                return new ResponseDTO(false, "Impossible to deleted the trade : " + e.getMessage());
+            }
+        } else {
+            logger.error("Impossible to find the trade with this id({})", id);
+            return new ResponseDTO(false, "Impossible to find this trade");
         }
     }
 
@@ -92,7 +104,6 @@ public class TradeServiceImpl implements TradeService {
         }
 
         return tradeDTOList;
-
     }
 
     /**
@@ -104,7 +115,7 @@ public class TradeServiceImpl implements TradeService {
     public TradeDTO getTradeById(int id) {
 
         if(id != 0) {
-            Optional<Trade> tradeById = Optional.ofNullable(tradeRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid trade Id:" + id)));
+            Optional<Trade> tradeById = tradeRepository.findById(id);
             if (tradeById.isPresent()) {
                 return modelMapper.map(tradeById.get(), TradeDTO.class);
             } else {
