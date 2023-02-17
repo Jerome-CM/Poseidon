@@ -26,7 +26,6 @@ public class Rating {
 
     private String fitchRating = "fitchRating";
 
-    //@Pattern(regexp = "^([1-9]|[1-9][0-9]{0,9})$")
     private Integer orderNumber = 0;
 
 }

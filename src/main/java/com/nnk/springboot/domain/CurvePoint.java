@@ -2,12 +2,8 @@ package com.nnk.springboot.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -27,14 +23,12 @@ public class CurvePoint {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
 
-    //@Pattern(regexp = "^([1-9]|[1-9][0-9]{0,9})$")
     @NotNull(message = "must not be null")
     private Integer curveId;
     @Column(columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     private Timestamp asOfDate = new Timestamp(new Date().getTime());
-    //@Pattern(regexp = "^[0-9]{1,}[.][0-9]{2}$")
+
     private Double term = 0.00;
-    //@Pattern(regexp = "^[0-9]{1,}[.][0-9]{2}$")
     private Double value = 0.00;
     @Column(columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP", updatable = false)
     private Timestamp creationDate = new Timestamp(new Date().getTime());

@@ -28,13 +28,9 @@ public class Trade {
     private String account;
     @NotBlank(message = "Type is mandatory")
     private String type;
-    //@Pattern(regexp = "^[0-9]{1,}[.][0-9]{2}$")
     private Double buyQuantity = 0.00;
-    //@Pattern(regexp = "^[0-9]{1,}[.][0-9]{2}$")
     private Double sellQuantity = 0.00;
-    //@Pattern(regexp = "^[0-9]{1,}[.][0-9]{2}$")
     private Double buyPrice = 0.00;
-    //@Pattern(regexp = "^[0-9]{1,}[.][0-9]{2}$")
     private Double sellPrice = 0.00;
     private String benchmark = "benchmark";
     @Column(columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
