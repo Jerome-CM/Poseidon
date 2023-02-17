@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static com.nnk.springboot.CustomSecurityMockMvcRequestPostProcessors.adminValue;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.springframework.mock.http.server.reactive.MockServerHttpRequest.post;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -53,7 +54,7 @@ public class RuleNameControllerTest {
     }
 
     @Test
-    public void addRuleNameTest() throws Exception {
+    public void getAddRuleNameTest() throws Exception {
         mockMvc.perform(get("/ruleName/add").with(adminValue()))
                 .andExpect(status().isOk());
     }

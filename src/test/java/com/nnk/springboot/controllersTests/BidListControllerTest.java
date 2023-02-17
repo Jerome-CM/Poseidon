@@ -31,8 +31,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @Profile("test")
-@Sql(value = "/dataInjected.sql",executionPhase = BEFORE_TEST_METHOD)
-@Sql(value = "/truncate.sql",executionPhase = AFTER_TEST_METHOD)
+/*@Sql(value = "/dataInjected.sql",executionPhase = BEFORE_TEST_METHOD)
+@Sql(value = "/truncate.sql",executionPhase = AFTER_TEST_METHOD)*/
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc

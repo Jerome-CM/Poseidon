@@ -16,6 +16,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Profile("test")
@@ -55,6 +57,33 @@ public class CurvePointControllerTest {
     public void addCurvePointTest() throws Exception {
         mockMvc.perform(get("/curvePoint/add").with(adminValue()))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void validateCurvePointAdmin() throws Exception {
+        mockMvc.perform(post("/curvePoint/validate")
+                .param("curveId", "10")
+                .param("term", "10.00")
+                .param("value", "5.00")
+                .with(adminValue())).andExpect(status().isOk());
+    }
+
+    @Test
+    public void validateErrorCurvePointAdmin() throws Exception {
+        mockMvc.perform(post("/curvePoint/validate")
+                .param("curveId", "10")
+                .param("term", "10.00")
+                .param("value", "Error")
+                .with(adminValue())).andExpect(model().hasErrors());
+    }
+
+    @Test
+    public void updateCurvePointAdmin() throws Exception {
+        mockMvc.perform(post("/curvePoint/update/1")
+                .param("curveId", "10")
+                .param("term", "10.00")
+                .param("value", "13.2")
+                .with(adminValue())).andExpect(status().isOk());
     }
 
     @Test

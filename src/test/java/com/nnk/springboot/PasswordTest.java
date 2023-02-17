@@ -1,11 +1,9 @@
 package com.nnk.springboot;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import com.nnk.springboot.Utility.PasswordValidate;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.test.context.junit4.SpringRunner;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -14,15 +12,19 @@ import static org.junit.jupiter.api.Assertions.*;
  * Date: 09/03/2019
  * Time: 11:26 AM
  */
-@RunWith(SpringRunner.class)
 @SpringBootTest
-public class PasswordEncodeTest {
+public class PasswordTest {
+
     @Test
-    public void testPassword() {
+    public void encodePasswordTest() {
+
+        String password = "AssertThat41!";
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        String pw = encoder.encode("123456");
-        assertNotEquals("123456", pw);
+        String pw = encoder.encode(password);
+        assertNotEquals("AssertThat41!", pw);
         assertTrue(pw.length() > 59);
+        assertTrue(PasswordValidate.isValid(password));
     }
+
 }
 

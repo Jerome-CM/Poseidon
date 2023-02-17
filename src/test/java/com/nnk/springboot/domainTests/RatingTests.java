@@ -3,21 +3,19 @@ package com.nnk.springboot.domainTests;
 import com.nnk.springboot.domain.Rating;
 import com.nnk.springboot.dto.RatingDTO;
 import com.nnk.springboot.dto.response.ResponseDTO;
-import com.nnk.springboot.repositories.RatingRepository;
 import com.nnk.springboot.services.RatingService;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Profile;
 import org.springframework.test.context.junit4.SpringRunner;
-
 import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@Profile("test")
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class RatingTests {
@@ -40,8 +38,9 @@ public class RatingTests {
 		// Update
 		rating.setOrderNumber(20);
 		rating.setId(ratingDTOSAve.getId());
-		ResponseDTO responseUpdate = ratingService.updateRating(rating, ratingDTOSAve.getId());
-		RatingDTO ratingDTOUpdate = ratingService.getAllRating().get(0);
+		System.out.println("------- Rating before update TEST" + rating);
+		ResponseDTO responseUpdate = ratingService.updateRating(rating, rating.getId());
+		RatingDTO ratingDTOUpdate = ratingService.getRatingById(rating.getId());
 		assertEquals(20, ratingDTOUpdate.getOrderNumber());
 		assertEquals("Rating updated with success", responseUpdate.getMessage());
 

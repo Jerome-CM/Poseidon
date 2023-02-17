@@ -1,4 +1,4 @@
-package com.nnk.springboot.Equals;
+package com.nnk.springboot;
 
 import com.nnk.springboot.domain.*;
 import org.junit.jupiter.api.Test;
