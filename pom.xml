@@ -149,6 +149,8 @@
 				<configuration>
 					<excludes>
 						<exclude>com/nnk/springboot/dto/**</exclude>
+						<exclude>com/nnk/springboot/jwtConfig/**</exclude>
+						<exclude>com/nnk/springboot/config/**</exclude>
 					</excludes>
 				</configuration>
 				<executions>
