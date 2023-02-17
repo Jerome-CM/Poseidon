@@ -3,8 +3,6 @@ package com.nnk.springboot.services;
 import com.nnk.springboot.domain.User;
 import com.nnk.springboot.dto.UserDTO;
 import com.nnk.springboot.dto.response.ResponseDTO;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 
@@ -23,7 +21,5 @@ public interface UserService {
     public boolean isTheUsernameAvailable(String username);
 
     public User getUserByUsername(String username);
-
-    public boolean verifyPasswordPattern(String password);
 
 }
