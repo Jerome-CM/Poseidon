@@ -107,7 +107,7 @@ public class UserServiceImpl implements UserService  {
                 try {
                     userRepository.save(userToUpdate);
                     logger.info("User updated : {}", user);
-                    return new ResponseDTO(true, "User updated with success ( with password )");
+                    return new ResponseDTO(true, "User updated with success");
                 } catch (Exception e) {
                     logger.error("Impossible to updated the user : {}", e.getMessage());
                     return new ResponseDTO(false, "Impossible to update the user : " + e.getMessage());
@@ -121,14 +121,14 @@ public class UserServiceImpl implements UserService  {
                         user.setPassword(passwordEncoder.encode(user.getPassword()));
                         User userUpdate = userRepository.save(user);
                         logger.info("User updated : {}", userUpdate);
-                        return new ResponseDTO(true, "User updated with success");
+                        return new ResponseDTO(true, "User updated with success ( with password )");
                     } catch (Exception e) {
                         logger.error("Impossible to updated the user : {}", e.getMessage());
                         return new ResponseDTO(false, "Impossible to update the user : " + e.getMessage());
                     }
                 } else {
-                    logger.error("At least one capital letter, 8 characters minimum, at least one number and one symbol (@$!%#?&)");
-                    return new ResponseDTO(false, "The password pattern isn't exactly");
+                    logger.error("The password pattern isn't exactly");
+                    return new ResponseDTO(false, "At least one capital letter, 8 characters minimum, at least one number and one symbol (!@#&()–[{}]:;',?/*~$^+=<>])");
                 }
             }
         } else {
@@ -144,9 +144,7 @@ public class UserServiceImpl implements UserService  {
     @Override
     public ResponseDTO deleteUserById(int id) {
         logger.info("--- Method deleteUserById ---");
-        System.out.println("------ id :" + id);
         Optional<User> user = userRepository.findById(id);
-        System.out.println("-------- user : " + user);
         if(user.isPresent()) {
             User userConfirm = user.get();
             try {
