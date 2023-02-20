@@ -78,7 +78,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().accessDeniedPage("/app/error")
                 .and()
                 .logout()
-                // .logoutSuccessUrl("/")
+                .deleteCookies("JSESSIONID")
                 .and()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .and()
