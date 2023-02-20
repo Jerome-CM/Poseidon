@@ -2,13 +2,20 @@ package com.nnk.springboot.services.implementation;
 
 import com.nnk.springboot.domain.User;
 import com.nnk.springboot.repositories.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
+@Slf4j
 public class UserDetailServiceJwt implements UserDetailsService {
 
     @Autowired
@@ -27,6 +34,10 @@ public class UserDetailServiceJwt implements UserDetailsService {
             throw new UsernameNotFoundException(username);
         }
         /* load username, password and Authorities in a User Spring */
-        return org.springframework.security.core.userdetails.User.withUsername(user.getUsername()).password(user.getPassword()).authorities(user.getRole()).build();
+        UserDetails userAuth = org.springframework.security.core.userdetails.User.withUsername(user.getUsername()).password(user.getPassword()).roles(user.getRole()).build();
+        log.info("Auth user : {}", userAuth);
+        return userAuth;
     }
+
+
 }
