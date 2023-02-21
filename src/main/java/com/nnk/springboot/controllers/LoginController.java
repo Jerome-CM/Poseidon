@@ -62,16 +62,8 @@ public class LoginController {
         ModelAndView mav = new ModelAndView();
         HttpSession session = request.getSession();
         session.invalidate();
-        mav.setViewName("logout");
-        return mav;
-    }
-
-    @GetMapping("/logout")
-    public ModelAndView getLogout() {
-        logger.info("--- Method GET logout ---");
-        ModelAndView mav = new ModelAndView();
         mav.addObject("response", new ResponseDTO(true, "You have been logout."));
-        mav.setViewName("logout");
+        mav.setViewName("home");
         return mav;
     }
 }
