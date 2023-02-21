@@ -11,9 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Profile;
 import org.springframework.test.context.junit4.SpringRunner;
 import java.util.List;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @Profile("test")
 @RunWith(SpringRunner.class)
@@ -53,5 +52,9 @@ public class RatingTests {
 		List<RatingDTO> list = ratingService.getAllRating();
 		assertEquals(0, list.size());
 		assertEquals("Rating deleted with success", responseDelete.getMessage());
+
+		// Get Error
+		assertThrows(IllegalArgumentException.class, () -> ratingService.getRatingById(10));
+
 	}
 }

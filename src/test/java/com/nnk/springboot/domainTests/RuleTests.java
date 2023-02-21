@@ -11,9 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Profile;
 import org.springframework.test.context.junit4.SpringRunner;
 import java.util.List;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @Profile("test")
 @RunWith(SpringRunner.class)
@@ -67,5 +66,9 @@ public class RuleTests {
 		// Delete with error
 		ResponseDTO responseDeleteError = ruleNameService.deleteRuleNameById(10);
 		assertEquals("Impossible to find this ruleName", responseDeleteError.getMessage());
+
+		// Get Error
+		assertThrows(IllegalArgumentException.class, () -> ruleNameService.getRuleNameById(10));
+
 	}
 }

@@ -69,6 +69,10 @@ public class BidTests {
 		// Delete with error
 		ResponseDTO responseDeleteError = bidListService.deleteBidListById(10);
 		assertEquals("Impossible to find a bidList", responseDeleteError.getMessage());
+
+		// Get Error
+		assertThrows(IllegalArgumentException.class, () -> bidListService.getBidListById(10));
+
 	}
 
 }
