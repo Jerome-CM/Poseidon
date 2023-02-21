@@ -49,14 +49,9 @@ public class CurvePointServiceImpl implements CurvePointService {
             CurvePoint curvePointHandleConfirm = curvePointHandle.get();
             try {
                 curvePoint.setId(curvePointHandleConfirm.getId());
-                if (curvePoint.getId() != null) {
-                    curvePointHandleConfirm = curvePointRepository.save(curvePoint);
-                    logger.info("CurvePoint updated : {}", curvePointHandleConfirm);
-                    return new ResponseDTO(true, "CurvePoint updated with success");
-                } else {
-                    logger.error("CurvePoint id is null with this id : {}", curvePoint);
-                    return new ResponseDTO(false, "CurvePoint id is null with this id : " + id);
-                }
+                curvePointHandleConfirm = curvePointRepository.save(curvePoint);
+                logger.info("CurvePoint updated : {}", curvePointHandleConfirm);
+                return new ResponseDTO(true, "CurvePoint updated with success");
             } catch (Exception e) {
                 logger.error("Impossible to updated the curvePoint : {}", e.getMessage());
                 return new ResponseDTO(false, "Impossible to save a curvePoint");
@@ -115,17 +110,13 @@ public class CurvePointServiceImpl implements CurvePointService {
     @Override
     public CurvePointDTO getCurvePointById(int id) {
 
-        if(id != 0) {
-            Optional<CurvePoint> curvePointById = Optional.ofNullable(curvePointRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid curvePoint Id:" + id)));
-            if (curvePointById.isPresent()) {
-                return modelMapper.map(curvePointById.get(), CurvePointDTO.class);
-            } else {
-                logger.error("CurvePoint not Found id : {})", id);
-            }
+        Optional<CurvePoint> curvePointById = Optional.ofNullable(curvePointRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid curvePoint Id:" + id)));
+        if (curvePointById.isPresent()) {
+            return modelMapper.map(curvePointById.get(), CurvePointDTO.class);
         } else {
-            throw new IllegalArgumentException("Invalid Id:" + id);
+            logger.error("CurvePoint not Found id : {})", id);
+            throw new IllegalArgumentException("Invalid Id");
         }
-        return null;
     }
 
 }

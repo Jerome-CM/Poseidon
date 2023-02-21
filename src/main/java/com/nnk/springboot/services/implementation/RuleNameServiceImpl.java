@@ -49,14 +49,10 @@ public class RuleNameServiceImpl implements RuleNameService {
             RuleName ruleNameHandleConfirm = ruleNameHandle.get();
             try {
                 ruleName.setId(ruleNameHandleConfirm.getId());
-                if (ruleName.getId() != null) {
-                    ruleNameHandleConfirm = ruleNameRepository.save(ruleName);
-                    logger.info("RuleName updated : {}", ruleNameHandleConfirm);
-                    return new ResponseDTO(true, "RuleName updated with success");
-                } else {
-                    logger.error("RuleName id is null with this id : {}", ruleName);
-                    return new ResponseDTO(false, "RuleName id is null with this id : " + id);
-                }
+                ruleNameHandleConfirm = ruleNameRepository.save(ruleName);
+                logger.info("RuleName updated : {}", ruleNameHandleConfirm);
+                return new ResponseDTO(true, "RuleName updated with success");
+
             } catch (Exception e) {
                 logger.error("Impossible to updated the ruleName : {}", e.getMessage());
                 return new ResponseDTO(false, "Impossible to update this ruleName : " + e.getMessage());
@@ -115,17 +111,13 @@ public class RuleNameServiceImpl implements RuleNameService {
     @Override
     public RuleNameDTO getRuleNameById(int id) {
 
-        if(id != 0) {
-            Optional<RuleName> ruleNameById = ruleNameRepository.findById(id);
-            if (ruleNameById.isPresent()) {
-                return modelMapper.map(ruleNameById.get(), RuleNameDTO.class);
-            } else {
-                logger.error("RuleName not Found id : {})", id);
-            }
+        Optional<RuleName> ruleNameById = ruleNameRepository.findById(id);
+        if (ruleNameById.isPresent()) {
+            return modelMapper.map(ruleNameById.get(), RuleNameDTO.class);
         } else {
-            throw new IllegalArgumentException("Invalid Id:" + id);
+            logger.error("RuleName not Found id : {})", id);
+            throw new IllegalArgumentException("Invalid Id");
         }
-        return null;
     }
 
 }

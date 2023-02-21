@@ -50,14 +50,10 @@ public class RatingServiceImpl implements RatingService {
             Rating ratingHandleConfirm = ratingHandle.get();
             try {
                 rating.setId(ratingHandleConfirm.getId());
-                if (rating.getId() != null) {
-                    ratingHandleConfirm = ratingRepository.save(rating);
-                    logger.info("Rating updated : {}", ratingHandleConfirm);
-                    return new ResponseDTO(true, "Rating updated with success");
-                } else {
-                    logger.error("Rating id is null with this id : {}", ratingHandleConfirm);
-                    return new ResponseDTO(false, "Rating id is null with this id : " + id);
-                }
+                ratingHandleConfirm = ratingRepository.save(rating);
+                logger.info("Rating updated : {}", ratingHandleConfirm);
+                return new ResponseDTO(true, "Rating updated with success");
+
             } catch (Exception e) {
                 logger.error("Impossible to updated the rating : {}", e.getMessage());
                 return new ResponseDTO(false, "Impossible to update a rating");
@@ -116,17 +112,13 @@ public class RatingServiceImpl implements RatingService {
     @Override
     public RatingDTO getRatingById(int id) {
 
-        if(id != 0) {
-            Optional<Rating> ratingById = ratingRepository.findById(id);
-            if (ratingById.isPresent()) {
-                return modelMapper.map(ratingById.get(), RatingDTO.class);
-            } else {
-                logger.error("Rating not Found id : {})", id);
-            }
+        Optional<Rating> ratingById = ratingRepository.findById(id);
+        if (ratingById.isPresent()) {
+            return modelMapper.map(ratingById.get(), RatingDTO.class);
         } else {
-            throw new IllegalArgumentException("Invalid Id:" + id);
+            logger.error("Rating not Found id : {})", id);
+            throw new IllegalArgumentException("Invalid Id");
         }
-        return null;
     }
 
 }

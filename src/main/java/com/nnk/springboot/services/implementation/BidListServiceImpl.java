@@ -49,14 +49,9 @@ public class BidListServiceImpl implements BidListService {
             BidList bidListHandleConfirm = bidListHandle.get();
             try{
                 bidList.setBidListId(bidListHandleConfirm.getBidListId());
-                if (bidList.getBidListId() != null) {
-                    bidListHandleConfirm = bidListRepository.save(bidList);
-                    logger.info("BidList updated : {}", bidListHandleConfirm);
-                    return new ResponseDTO(true, "bidList updated with success");
-                } else {
-                    logger.error("BidList id is null with this id : {}", bidList);
-                    return new ResponseDTO(false, "BidList id is null with this id : " + id);
-                }
+                bidListHandleConfirm = bidListRepository.save(bidList);
+                logger.info("BidList updated : {}", bidListHandleConfirm);
+                return new ResponseDTO(true, "bidList updated with success");
             } catch (Exception e) {
                 logger.error("Impossible to updated the bidList : {}", e.getMessage());
                 return new ResponseDTO(false, "Impossible to update a bidList");
@@ -116,17 +111,13 @@ public class BidListServiceImpl implements BidListService {
     @Override
     public BidListDTO getBidListById(int id) {
 
-        if(id != 0) {
-            Optional<BidList> bidListById = bidListRepository.findById(id);
-            if (bidListById.isPresent()) {
-                return modelMapper.map(bidListById.get(), BidListDTO.class);
-            } else {
-                logger.error("BidList not Found id : {})", id);
-            }
+        Optional<BidList> bidListById = bidListRepository.findById(id);
+        if (bidListById.isPresent()) {
+            return modelMapper.map(bidListById.get(), BidListDTO.class);
         } else {
-            throw new IllegalArgumentException("Invalid Id:" + id);
+            logger.error("BidList not Found id : {})", id);
+            throw new IllegalArgumentException("Invalid Id");
         }
-        return null;
     }
 
 }

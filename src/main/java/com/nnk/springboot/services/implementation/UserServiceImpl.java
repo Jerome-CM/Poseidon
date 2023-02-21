@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -60,7 +61,7 @@ public class UserServiceImpl implements UserService  {
                 return new ResponseDTO(true, "User saved with success");
             } catch (Exception e){
                 logger.error("Impossible to save a user : {}", e.getMessage());
-                return new ResponseDTO(false, "Impossible to save the user : " + e.getMessage());
+                return new ResponseDTO(false, "Impossible to save the user");
             }
 
         } else {
@@ -80,9 +81,9 @@ public class UserServiceImpl implements UserService  {
 
         logger.info("--- Method updateUser ---");
         Optional<User> userWithIdJoin = userRepository.findById(id);
-        int userJoinGetId = userWithIdJoin.get().getId();
+        User userJoinConfirm = userWithIdJoin.get();
 
-        if (userJoinGetId == user.getId()) {
+        if (Objects.equals(userJoinConfirm.getId(), user.getId())) {
 
             // the username is available ?
             if (!userWithIdJoin.get().getUsername().equals(user.getUsername())) {
@@ -110,7 +111,7 @@ public class UserServiceImpl implements UserService  {
                     return new ResponseDTO(true, "User updated with success");
                 } catch (Exception e) {
                     logger.error("Impossible to updated the user : {}", e.getMessage());
-                    return new ResponseDTO(false, "Impossible to update the user : " + e.getMessage());
+                    return new ResponseDTO(false, "Impossible to update the user");
                 }
 
             } else {
@@ -124,7 +125,7 @@ public class UserServiceImpl implements UserService  {
                         return new ResponseDTO(true, "User updated with success ( with password )");
                     } catch (Exception e) {
                         logger.error("Impossible to updated the user : {}", e.getMessage());
-                        return new ResponseDTO(false, "Impossible to update the user : " + e.getMessage());
+                        return new ResponseDTO(false, "Impossible to update the user");
                     }
                 } else {
                     logger.error("The password pattern isn't exactly");
@@ -153,7 +154,7 @@ public class UserServiceImpl implements UserService  {
                 return new ResponseDTO(true, "User deleted with success");
             } catch (Exception e) {
                 logger.error("Impossible to delete the user with this id({}) : {}", id, e.getMessage());
-                return new ResponseDTO(false, "Impossible to delete the user : " + e.getMessage());
+                return new ResponseDTO(false, "Impossible to delete the user");
             }
         } else {
             logger.error("Impossible to find the user with this id({})", id);
@@ -190,17 +191,13 @@ public class UserServiceImpl implements UserService  {
     public UserDTO getUsersById(int id) {
         logger.info("--- Method getUsersById ---");
 
-        if(id != 0) {
-            Optional<User> userById = userRepository.findById(id);
-            if (userById.isPresent()) {
-                return modelMapper.map(userById.get(),UserDTO.class);
-            } else {
-                logger.error("User not Found id : {})", id);
-            }
+        Optional<User> userById = userRepository.findById(id);
+        if (userById.isPresent()) {
+            return modelMapper.map(userById.get(),UserDTO.class);
         } else {
-            throw new IllegalArgumentException("Invalid Id:" + id);
+            logger.error("User not found with id : {})", id);
+            throw new IllegalArgumentException("User not found with id : " + id);
         }
-        return null;
     }
 
     /**

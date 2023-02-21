@@ -49,14 +49,10 @@ public class TradeServiceImpl implements TradeService {
             Trade tradeHandleConfirm = tradeHandle.get();
             try {
                 trade.setTradeId(tradeHandleConfirm.getTradeId());
-                if (trade.getTradeId() != null) {
-                    tradeHandleConfirm = tradeRepository.save(trade);
-                    logger.info("Trade updated : {}", tradeHandleConfirm);
-                    return new ResponseDTO(true, "Trade updated with success");
-                } else {
-                    logger.error("Trade id is null with this id : {}", trade);
-                    return new ResponseDTO(false, "Trade id is null with this id " + id);
-                }
+                tradeHandleConfirm = tradeRepository.save(trade);
+                logger.info("Trade updated : {}", tradeHandleConfirm);
+                return new ResponseDTO(true, "Trade updated with success");
+
             } catch (Exception e) {
                 logger.error("Impossible to updated the trade : {}", e.getMessage());
                 return new ResponseDTO(false, "Impossible to updated the trade : " + e.getMessage());
@@ -114,17 +110,13 @@ public class TradeServiceImpl implements TradeService {
     @Override
     public TradeDTO getTradeById(int id) {
 
-        if(id != 0) {
-            Optional<Trade> tradeById = tradeRepository.findById(id);
-            if (tradeById.isPresent()) {
-                return modelMapper.map(tradeById.get(), TradeDTO.class);
-            } else {
-                logger.error("Trade not Found id : {})", id);
-            }
+        Optional<Trade> tradeById = tradeRepository.findById(id);
+        if (tradeById.isPresent()) {
+            return modelMapper.map(tradeById.get(), TradeDTO.class);
         } else {
-            throw new IllegalArgumentException("Invalid Id:" + id);
+            logger.error("Trade not Found id : {})", id);
+            throw new IllegalArgumentException("Invalid Id");
         }
-        return null;
     }
 
 }
