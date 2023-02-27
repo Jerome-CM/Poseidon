@@ -5,6 +5,7 @@ import javax.servlet.http.HttpSession;
 import com.nnk.springboot.domain.User;
 import com.nnk.springboot.jwtConfig.JwtTokenUtil;
 import com.nnk.springboot.services.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +19,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
+@Slf4j
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
-
-    private static final Logger logger = LogManager.getLogger(CustomAuthenticationSuccessHandler.class);
+    
     @Autowired
     private JwtTokenUtil jwtTest;
 
@@ -29,7 +30,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        logger.info("--- Method onAuthenticationSuccess ---");
+        log.info("--- Method onAuthenticationSuccess ---");
         /*Take the mail in the session after success login*/
 
         HttpSession session = request.getSession();
@@ -39,18 +40,18 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         User user = userService.getUserByUsername(username);
 
         if(session.getAttribute("token") == null){
-            logger.info("Create a new token because is null in the session");
+            log.info("Create a new token because is null in the session");
             String token = null;
             try {
                 token = jwtTest.createAuthenticationToken(username);
             } catch (Exception e) {
-                logger.info("Impossible to create a token : {}", e.getMessage());
+                log.info("Impossible to create a token : {}", e.getMessage());
                 throw new RuntimeException(e);
             }
             session.setAttribute("token", token);
             session.setAttribute("role", user.getRole());
         }
-        logger.info("Token in session : {}", session.getAttribute("token"));
+        log.info("Token in session : {}", session.getAttribute("token"));
 
         if(user.getRole().equals("ADMIN")){
             response.sendRedirect("/admin/home");

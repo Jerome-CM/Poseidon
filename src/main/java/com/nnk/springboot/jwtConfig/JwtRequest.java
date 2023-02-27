@@ -1,6 +1,5 @@
 package com.nnk.springboot.jwtConfig;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 
 public class JwtRequest implements Serializable {
@@ -9,8 +8,6 @@ public class JwtRequest implements Serializable {
 
     private String username;
     private String password;
-
-    private HttpServletRequest request;
 
     //need default constructor for JSON Parsing
     public JwtRequest() {
