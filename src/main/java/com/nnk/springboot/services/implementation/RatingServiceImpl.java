@@ -5,6 +5,7 @@ import com.nnk.springboot.dto.RatingDTO;
 import com.nnk.springboot.dto.response.ResponseDTO;
 import com.nnk.springboot.repositories.RatingRepository;
 import com.nnk.springboot.services.RatingService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
@@ -15,10 +16,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class RatingServiceImpl implements RatingService {
-
-    private static final Logger logger = LogManager.getLogger(RatingServiceImpl.class);
-
     private final RatingRepository ratingRepository;
 
     private final ModelMapper modelMapper;
@@ -28,22 +27,33 @@ public class RatingServiceImpl implements RatingService {
         this.modelMapper = modelMapper;
     }
 
+    /**
+     * Save a new Rating
+     * @param rating
+     * @return
+     */
     @Override
     public ResponseDTO saveRating(Rating rating){
-        logger.info("--- Method saveRating ---");
+        log.info("--- Method saveRating ---");
         try{
             ratingRepository.save(rating);
-            logger.info("Rating saved : {}", rating);
+            log.info("Rating saved : {}", rating);
             return new ResponseDTO(true, "Rating saved with success");
         } catch (Exception e){
-            logger.error("Impossible to save a rating : {}", e.getMessage());
+            log.error("Impossible to save a rating : {}", e.getMessage());
             return new ResponseDTO(false, "Impossible to save a rating");
         }
     }
 
+    /**
+     * Update a rating
+     * @param rating
+     * @param id
+     * @return
+     */
     @Override
     public ResponseDTO updateRating(Rating rating, int id){
-        logger.info("--- Method updateRating ---");
+        log.info("--- Method updateRating ---");
         System.out.println("------ Rating reçu dans le service :" + rating);
         Optional<Rating> ratingHandle = ratingRepository.findById(id);
         if(ratingHandle.isPresent()) {
@@ -51,35 +61,40 @@ public class RatingServiceImpl implements RatingService {
             try {
                 rating.setId(ratingHandleConfirm.getId());
                 ratingHandleConfirm = ratingRepository.save(rating);
-                logger.info("Rating updated : {}", ratingHandleConfirm);
+                log.info("Rating updated : {}", ratingHandleConfirm);
                 return new ResponseDTO(true, "Rating updated with success");
 
             } catch (Exception e) {
-                logger.error("Impossible to updated the rating : {}", e.getMessage());
+                log.error("Impossible to updated the rating : {}", e.getMessage());
                 return new ResponseDTO(false, "Impossible to update a rating");
             }
         } else {
-            logger.error("Impossible to find the rating");
+            log.error("Impossible to find the rating");
             return new ResponseDTO(false, "Impossible to find a rating");
         }
     }
 
+    /**
+     * Delete a Rating
+     * @param id
+     * @return
+     */
     @Override
     public ResponseDTO deleteRatingById(int id) {
-        logger.info("--- Method deleteRatingById ---");
+        log.info("--- Method deleteRatingById ---");
         Optional<Rating> rating = ratingRepository.findById(id);
         if(rating.isPresent()) {
             Rating ratingPresent = rating.get();
             try {
                 ratingRepository.delete(ratingPresent);
-                logger.info("Rating deleted");
+                log.info("Rating deleted");
                 return new ResponseDTO(true, "Rating deleted with success");
             } catch (Exception e) {
-                logger.error("Impossible to delete the rating with this id({}) : {}", id, e.getMessage());
+                log.error("Impossible to delete the rating with this id({}) : {}", id, e.getMessage());
                 return new ResponseDTO(false, "Impossible to delete a rating");
             }
         } else {
-            logger.error("Impossible to find the rating with this id({})", id);
+            log.error("Impossible to find the rating with this id({})", id);
             return new ResponseDTO(false, "Impossible to find a rating");
         }
     }
@@ -116,7 +131,7 @@ public class RatingServiceImpl implements RatingService {
         if (ratingById.isPresent()) {
             return modelMapper.map(ratingById.get(), RatingDTO.class);
         } else {
-            logger.error("Rating not Found id : {})", id);
+            log.error("Rating not Found id : {})", id);
             throw new IllegalArgumentException("Invalid Id");
         }
     }

@@ -7,8 +7,7 @@ import com.nnk.springboot.dto.response.ResponseDTO;
 import com.nnk.springboot.repositories.UserRepository;
 import com.nnk.springboot.domain.User;
 import com.nnk.springboot.services.UserService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,16 +18,13 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService  {
-    private static final Logger logger = LogManager.getLogger(UserServiceImpl.class);
-
     private final UserRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
 
     private final ModelMapper modelMapper;
-
-
 
     public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, ModelMapper modelMapper) {
         this.userRepository = userRepository;
@@ -43,7 +39,7 @@ public class UserServiceImpl implements UserService  {
      */
     @Override
     public ResponseDTO saveUser(User user){
-        logger.info("--- Method saveUser ---");
+        log.info("--- Method saveUser ---");
 
         if(PasswordValidate.isValid(user.getPassword())){
 
@@ -51,21 +47,21 @@ public class UserServiceImpl implements UserService  {
 
             // the username is available ?
             if(!isTheUsernameAvailable(user.getUsername())){
-                logger.error("The username isn't available : {}", user.getUsername());
+                log.error("The username isn't available : {}", user.getUsername());
                 return new ResponseDTO(false, "This username isn't available");
             }
 
             try{
                 userRepository.save(user);
-                logger.info("User saved : {}", user);
+                log.info("User saved : {}", user);
                 return new ResponseDTO(true, "User saved with success");
             } catch (Exception e){
-                logger.error("Impossible to save a user : {}", e.getMessage());
+                log.error("Impossible to save a user : {}", e.getMessage());
                 return new ResponseDTO(false, "Impossible to save the user");
             }
 
         } else {
-            logger.error("At least one capital letter, 8 characters minimum, at least one number and one symbol (@$!%#?&)");
+            log.error("At least one capital letter, 8 characters minimum, at least one number and one symbol (@$!%#?&)");
             return new ResponseDTO(false, "The password pattern isn't exactly");
         }
     }
@@ -79,7 +75,7 @@ public class UserServiceImpl implements UserService  {
     @Override
     public ResponseDTO updateUser(User user, int id) {
 
-        logger.info("--- Method updateUser ---");
+        log.info("--- Method updateUser ---");
         Optional<User> userWithIdJoin = userRepository.findById(id);
         User userJoinConfirm = userWithIdJoin.get();
 
@@ -88,7 +84,7 @@ public class UserServiceImpl implements UserService  {
             // the username is available ?
             if (!userWithIdJoin.get().getUsername().equals(user.getUsername())) {
                 if (!isTheUsernameAvailable(user.getUsername())) {
-                    logger.error("The username isn't available : {}", user.getUsername());
+                    log.error("The username isn't available : {}", user.getUsername());
                     return new ResponseDTO(false, "This username isn't available");
                 }
             }
@@ -107,10 +103,10 @@ public class UserServiceImpl implements UserService  {
                 // Try update a user without password
                 try {
                     userRepository.save(userToUpdate);
-                    logger.info("User updated : {}", user);
+                    log.info("User updated : {}", user);
                     return new ResponseDTO(true, "User updated with success");
                 } catch (Exception e) {
-                    logger.error("Impossible to updated the user : {}", e.getMessage());
+                    log.error("Impossible to updated the user : {}", e.getMessage());
                     return new ResponseDTO(false, "Impossible to update the user");
                 }
 
@@ -121,14 +117,14 @@ public class UserServiceImpl implements UserService  {
                         user.setId(id);
                         user.setPassword(passwordEncoder.encode(user.getPassword()));
                         User userUpdate = userRepository.save(user);
-                        logger.info("User updated : {}", userUpdate);
+                        log.info("User updated : {}", userUpdate);
                         return new ResponseDTO(true, "User updated with success ( with password )");
                     } catch (Exception e) {
-                        logger.error("Impossible to updated the user : {}", e.getMessage());
+                        log.error("Impossible to updated the user : {}", e.getMessage());
                         return new ResponseDTO(false, "Impossible to update the user");
                     }
                 } else {
-                    logger.error("The password pattern isn't exactly");
+                    log.error("The password pattern isn't exactly");
                     return new ResponseDTO(false, "At least one capital letter, 8 characters minimum, at least one number and one symbol (!@#&()–[{}]:;',?/*~$^+=<>])");
                 }
             }
@@ -144,20 +140,20 @@ public class UserServiceImpl implements UserService  {
      */
     @Override
     public ResponseDTO deleteUserById(int id) {
-        logger.info("--- Method deleteUserById ---");
+        log.info("--- Method deleteUserById ---");
         Optional<User> user = userRepository.findById(id);
         if(user.isPresent()) {
             User userConfirm = user.get();
             try {
                 userRepository.delete(userConfirm);
-                logger.info("User deleted");
+                log.info("User deleted");
                 return new ResponseDTO(true, "User deleted with success");
             } catch (Exception e) {
-                logger.error("Impossible to delete the user with this id({}) : {}", id, e.getMessage());
+                log.error("Impossible to delete the user with this id({}) : {}", id, e.getMessage());
                 return new ResponseDTO(false, "Impossible to delete the user");
             }
         } else {
-            logger.error("Impossible to find the user with this id({})", id);
+            log.error("Impossible to find the user with this id({})", id);
             return new ResponseDTO(false, "Impossible to find the user");
         }
     }
@@ -168,7 +164,7 @@ public class UserServiceImpl implements UserService  {
      */
     @Override
     public List<UserDTO> getAllUsers() {
-        logger.info("--- Method getAllUsers ---");
+        log.info("--- Method getAllUsers ---");
 
         List<User> userList = userRepository.findAll();
 
@@ -189,13 +185,13 @@ public class UserServiceImpl implements UserService  {
      */
     @Override
     public UserDTO getUsersById(int id) {
-        logger.info("--- Method getUsersById ---");
+        log.info("--- Method getUsersById ---");
 
         Optional<User> userById = userRepository.findById(id);
         if (userById.isPresent()) {
             return modelMapper.map(userById.get(),UserDTO.class);
         } else {
-            logger.error("User not found with id : {})", id);
+            log.error("User not found with id : {})", id);
             throw new IllegalArgumentException("User not found with id : " + id);
         }
     }
