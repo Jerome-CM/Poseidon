@@ -2,6 +2,7 @@ package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.Trade;
 import com.nnk.springboot.services.TradeService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -15,10 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.validation.Valid;
 
 @Controller
+@Slf4j
 public class TradeController {
 
-    private static final Logger logger = LogManager.getLogger(TradeController.class);
-    public final TradeService tradeService;
+    private final TradeService tradeService;
     public TradeController(TradeService tradeService) {
         this.tradeService = tradeService;
     }
@@ -26,21 +27,21 @@ public class TradeController {
     @RequestMapping("/trade/list")
     public String home(Model model)
     {
-        logger.info("--- Method home ---");
+        log.info("--- View list ---");
         model.addAttribute("trades", tradeService.getAllTrade());
         return "trade/list";
     }
 
     @GetMapping("/trade/add")
     public String addTrade(Trade bid, Model model) {
-        logger.info("--- Method addTrade ---");
+        log.info("--- Method addTrade ---");
         model.addAttribute("trade", bid);
         return "trade/add";
     }
 
     @PostMapping("/trade/validate")
     public String validate(@Valid Trade trade, BindingResult result, Model model) {
-        logger.info("--- Method validate ---");
+        log.info("--- Method validate ---");
         if (!result.hasErrors()) {
             model.addAttribute("response", tradeService.saveTrade(trade));
             model.addAttribute("trades", tradeService.getAllTrade());
@@ -51,7 +52,7 @@ public class TradeController {
 
     @GetMapping("/trade/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        logger.info("--- Method showUpdateForm ---");
+        log.info("--- Method showUpdateForm ---");
         model.addAttribute("trade", tradeService.getTradeById(id));
         return "trade/update";
     }
@@ -60,7 +61,7 @@ public class TradeController {
     public String updateTrade(@PathVariable("id") Integer id, @Valid Trade trade,
                              BindingResult result, Model model) {
 
-        logger.info("--- Method updateTrade ---");
+        log.info("--- Method updateTrade ---");
         if (result.hasErrors()) {
             return "trade/update";
         }
@@ -71,7 +72,7 @@ public class TradeController {
 
     @GetMapping("/trade/delete/{id}")
     public String deleteTrade(@PathVariable("id") Integer id, Model model) {
-        logger.info("--- Method deleteTrade ---");
+        log.info("--- Method deleteTrade ---");
         model.addAttribute("response", tradeService.deleteTradeById(id));
         model.addAttribute("trades", tradeService.getAllTrade());
         return "/trade/list";

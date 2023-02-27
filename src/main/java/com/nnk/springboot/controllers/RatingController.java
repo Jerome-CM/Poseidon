@@ -2,6 +2,7 @@ package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.Rating;
 import com.nnk.springboot.services.RatingService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -15,10 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.validation.Valid;
 
 @Controller
+@Slf4j
 public class RatingController {
 
-    private static final Logger logger = LogManager.getLogger(RatingController.class);
-    public final RatingService ratingService;
+    private final RatingService ratingService;
 
     public RatingController(RatingService ratingService) {
         this.ratingService = ratingService;
@@ -27,20 +28,20 @@ public class RatingController {
     @RequestMapping("/rating/list")
     public String home(Model model)
     {
-        logger.info("--- Method home ---");
+        log.info("--- View list ---");
         model.addAttribute("ratings", ratingService.getAllRating());
         return "rating/list";
     }
 
     @GetMapping("/rating/add")
     public String addRatingForm(Rating rating) {
-        logger.info("--- Method addRatingForm ---");
+        log.info("--- Method addRatingForm ---");
         return "rating/add";
     }
 
     @PostMapping("/rating/validate")
     public String validate(@Valid Rating rating, BindingResult result, Model model) {
-        logger.info("--- Method validate ---");
+        log.info("--- Method validate ---");
         if (!result.hasErrors()) {
             model.addAttribute("response", ratingService.saveRating(rating));
             model.addAttribute("ratings", ratingService.getAllRating());
@@ -51,7 +52,7 @@ public class RatingController {
 
     @GetMapping("/rating/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        logger.info("--- Method showUpdateForm ---");
+        log.info("--- Method showUpdateForm ---");
         model.addAttribute("rating", ratingService.getRatingById(id));
         return "rating/update";
     }
@@ -59,7 +60,7 @@ public class RatingController {
     @PostMapping("/rating/update/{id}")
     public String updateRating(@PathVariable("id") Integer id, @Valid Rating rating,
                              BindingResult result, Model model) {
-        logger.info("--- Method updateRating ---");
+        log.info("--- Method updateRating ---");
 
         if (result.hasErrors()) {
             return "rating/update";
@@ -72,7 +73,7 @@ public class RatingController {
 
     @GetMapping("/rating/delete/{id}")
     public String deleteRating(@PathVariable("id") Integer id, Model model) {
-        logger.info("--- Method deleteRating ---");
+        log.info("--- Method deleteRating ---");
         model.addAttribute("response", ratingService.deleteRatingById(id));
         model.addAttribute("ratings", ratingService.getAllRating());
         return "/rating/list";

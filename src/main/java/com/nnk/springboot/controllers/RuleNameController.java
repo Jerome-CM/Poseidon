@@ -2,6 +2,7 @@ package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.RuleName;
 import com.nnk.springboot.services.RuleNameService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -15,11 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.validation.Valid;
 
 @Controller
+@Slf4j
 public class RuleNameController {
 
-    private static final Logger logger = LogManager.getLogger(RuleNameController.class);
-
-    public final RuleNameService ruleNameService;
+    private final RuleNameService ruleNameService;
 
     public RuleNameController(RuleNameService ruleNameService) {
         this.ruleNameService = ruleNameService;
@@ -29,20 +29,20 @@ public class RuleNameController {
     @RequestMapping("/ruleName/list")
     public String home(Model model)
     {
-        logger.info("--- Method home ---");
+        log.info("--- View list ---");
         model.addAttribute("ruleNames", ruleNameService.getAllRuleName());
         return "ruleName/list";
     }
 
     @GetMapping("/ruleName/add")
     public String addRuleForm(RuleName bid) {
-        logger.info("--- Method addRuleForm ---");
+        log.info("--- Method addRuleForm ---");
         return "ruleName/add";
     }
 
     @PostMapping("/ruleName/validate")
     public String validate(@Valid RuleName ruleName, BindingResult result, Model model) {
-        logger.info("--- Method validate ---");
+        log.info("--- Method validate ---");
         if (!result.hasErrors()) {
             model.addAttribute("response", ruleNameService.saveRuleName(ruleName));
             model.addAttribute("ruleNames", ruleNameService.getAllRuleName());

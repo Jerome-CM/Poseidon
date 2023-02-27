@@ -4,6 +4,7 @@ import com.nnk.springboot.domain.User;
 import com.nnk.springboot.dto.response.ResponseDTO;
 import com.nnk.springboot.repositories.UserRepository;
 import com.nnk.springboot.services.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -18,9 +19,8 @@ import javax.validation.Valid;
 import java.security.Principal;
 
 @Controller
+@Slf4j
 public class UserController {
-
-    private static final Logger logger = LogManager.getLogger(UserController.class);
 
     private final UserRepository userRepository;
 
@@ -34,21 +34,21 @@ public class UserController {
     @RequestMapping("/user/list")
     public String home(Model model)
     {
-        logger.info("--- Method home ---");
+        log.info("--- View list ---");
         model.addAttribute("users", userService.getAllUsers());
         return "user/list";
     }
 
     @GetMapping("/user/add")
     public String addUser(User bid, Model model) {
-        logger.info("--- Method addUser ---");
+        log.info("--- Method addUser ---");
         model.addAttribute("user", bid);
         return "user/add";
     }
 
     @PostMapping("/user/validate")
     public String validate(@Valid User user, BindingResult result, Model model) {
-        logger.info("--- Method validate ---");
+        log.info("--- Method validate ---");
         if (!result.hasErrors()) {
             model.addAttribute("response", userService.saveUser(user));
             model.addAttribute("users", userService.getAllUsers());
@@ -60,7 +60,7 @@ public class UserController {
 
     @GetMapping("/user/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        logger.info("--- Method showUpdateForm ---");
+        log.info("--- Method showUpdateForm ---");
         model.addAttribute("user", userService.getUsersById(id));
         return "user/update";
     }
@@ -68,16 +68,16 @@ public class UserController {
     @PostMapping("/user/update/{id}")
     public String updateUser(@PathVariable("id") Integer id, @Valid User user,
                              BindingResult result, Model model) {
-        logger.info("--- Method updateUser ---");
+        log.info("--- Method updateUser ---");
         model.addAttribute("response", userService.updateUser(user, id));
-        logger.info("--- All user {} ---", userService.getAllUsers());
+        log.info("--- All user {} ---", userService.getAllUsers());
         model.addAttribute("users", userService.getAllUsers());
         return "/user/list";
     }
 
     @GetMapping("/user/delete/{id}")
     public String deleteUser(@PathVariable("id") Integer id, Model model) {
-        logger.info("--- Method deleteUser ---");
+        log.info("--- Method deleteUser ---");
         model.addAttribute("response", userService.deleteUserById(id));
         model.addAttribute("users", userService.getAllUsers());
         return "/user/list";

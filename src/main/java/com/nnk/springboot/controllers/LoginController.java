@@ -4,8 +4,7 @@ import com.nnk.springboot.domain.User;
 import com.nnk.springboot.dto.response.ResponseDTO;
 import com.nnk.springboot.repositories.UserRepository;
 import io.swagger.models.Model;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,9 +16,8 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("app")
+@Slf4j
 public class LoginController {
-
-    private static final Logger logger = LogManager.getLogger(LoginController.class);
 
     private final UserRepository userRepository;
 
@@ -29,7 +27,7 @@ public class LoginController {
 
     @GetMapping("/login")
     public ModelAndView login(User user, Model model) {
-        logger.info("--- Method login ---");
+        log.info("--- Method login ---");
         ModelAndView mav = new ModelAndView();
         mav.addObject("user", user);
         mav.setViewName("login");
@@ -38,7 +36,7 @@ public class LoginController {
 
     @GetMapping("secure/article-details")
     public ModelAndView getAllUserArticles() {
-        logger.info("--- Method getAllUserArticles ( loginController ) ---");
+        log.info("--- Method getAllUserArticles ( loginController ) ---");
         ModelAndView mav = new ModelAndView();
         mav.addObject("users", userRepository.findAll());
         mav.setViewName("user/list");
@@ -47,18 +45,18 @@ public class LoginController {
 
     @GetMapping("/error")
     public ModelAndView error() {
-        logger.info("--- Method error ---");
+        log.info("--- Method error ---");
         ModelAndView mav = new ModelAndView();
         String errorMessage= "You are not authorized for the requested data.";
         mav.addObject("errorMsg", errorMessage);
         mav.setViewName("403");
-        logger.error("403 Forbidden");
+        log.error("403 Forbidden");
         return mav;
     }
 
     @PostMapping("/logout")
     public ModelAndView postLogout(HttpServletRequest request) {
-        logger.info("--- Method POST logout ---");
+        log.info("--- Method POST logout ---");
         ModelAndView mav = new ModelAndView();
         HttpSession session = request.getSession();
         session.invalidate();
